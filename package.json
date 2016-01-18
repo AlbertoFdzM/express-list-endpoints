@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-    "repository": {
+  "repository": {
     "type": "git",
     "url": "https://github.com/AlbertoFdzM/express-list-endpoints.git"
   },
@@ -23,5 +23,11 @@
   ],
   "author": "Alberto Fernandez <albertofdzm@gmail.com>",
   "license": "MIT",
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  }
 }
