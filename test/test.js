@@ -5,7 +5,7 @@ var assert = chai.assert;
 var expect = chai.expect;
 var should = chai.should();
 
-var router1 = express.Router()
+var router1 = express.Router();
 
 router1.route('/')
   .get(function(req, res) {
