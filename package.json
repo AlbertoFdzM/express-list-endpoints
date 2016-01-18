@@ -1,0 +1,23 @@
+{
+  "name": "express-list-endpoints",
+  "version": "0.0.0",
+  "description": "A express package to list all registered endoints and its verbs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "routes",
+    "endpoints",
+    "route",
+    "endpoint",
+    "list",
+    "ls",
+    "verb",
+    "verbs"
+  ],
+  "author": "Alberto Fernandez <albertofdzm@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {}
+}
