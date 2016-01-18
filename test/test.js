@@ -13,23 +13,23 @@ router1.route('/')
   });
 
 describe('express-list-endpoints', function () {
-  describe('when called over router1', function () {
+  describe('when called over a router', function () {
     var endpoints = listEndpoints(router1.stack);
 
-    it('should retrieve an array', function () {
+    describe('should retrieve an array', function () {
       endpoints.should.not.be.empty;
       endpoints.should.be.an('array');
-      endpoints.to.have.length(1);
+      endpoints.should.have.length(1);
 
       it('of objects', function () {
-        endpoints.each(function (endpoint) {
+        endpoints.forEach(function (endpoint) {
           endpoint.should.not.be.empty;
           endpoint.should.be.an('object');
         });
       });
 
-      it('with the router endpoints', function () {
-        endpoints.each(function (endpoint) {
+      describe('with the router endpoints', function () {
+        endpoints.forEach(function (endpoint) {
           endpoint.path.should.not.be.empty;
           endpoint.path.should.be.a('string');
 
