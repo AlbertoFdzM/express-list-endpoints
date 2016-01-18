@@ -2,16 +2,19 @@ var express = require('express');
 var router = express.Router();
 
 /**
- * Print in console all the methods detected for the passed route
+ * Print in console all the verbs detected for the passed route
  */
 var getRouteMethods = function (route, options) {
+  var methods = [];
   options = options || {};
 
   for (var method in route.methods) {
     if (!options.withAll && method === '_all') continue;
 
-    console.log(options.prefix + route.path + ' - ' + method.toUpperCase());
+    methods.push(method.toUpperCase());
   }
+
+  return methods;
 };
 
 /**
@@ -28,7 +31,7 @@ var getEndpoints = function (routerStack, path, endpoints) {
 
   	if (val.route) {
       endpoints.push(path + val.route.path);
-      getRouteMethods(val.route, {prefix: path});
+      // getRouteMethods(val.route, {prefix: path});
 
   	} else if (val.name === 'router' || val.name === 'bound dispatch') {
       if (newPath) {
