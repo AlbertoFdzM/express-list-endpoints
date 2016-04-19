@@ -9,7 +9,7 @@ var getRouteMethods = function(route, options) {
   options = options || {};
 
   for (var method in route.methods) {
-    if (!options.withAll && method === '_all') continue;
+    if (!options.withAll && method === '_all') {continue;}
 
     methods.push(method.toUpperCase());
   }
@@ -21,7 +21,7 @@ var getRouteMethods = function(route, options) {
  * Return an array if strings with all the detected endpoints
  */
 var getEndpoints = function(routerStack, path, endpoints) {
-  var regExp = /^\/\^\\\/(?:(\w*)|(\(\?:\(\[\^\\\/\]\+\?\)\)))\\\/.*/;
+  var regExp = /^\/\^\\\/(?:((?:\w|\\\.|-)*)|(\(\?:\(\[\^\\\/\]\+\?\)\)))\\\/.*/;
 
   endpoints = endpoints || [];
   path = path || '';

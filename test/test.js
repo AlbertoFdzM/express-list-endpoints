@@ -5,30 +5,32 @@ var assert = chai.assert;
 var expect = chai.expect;
 var should = chai.should();
 
-var router1 = express.Router();
-
-router1.route('/')
-  .get(function(req, res) {
-    res.end();
-  })
-  .all(function(req, res) {
-    res.end();
-  })
-  .post(function(req, res) {
-    res.end();
-  });
-
-router1.route('/testing')
-  .all(function(req, res) {
-    res.end();
-  })
-  .delete(function(req, res) {
-    res.end();
-  });
-
 describe('express-list-endpoints', function() {
   describe('when called over a router', function() {
-    var endpoints = listEndpoints(router1.stack);
+    var endpoints;
+
+    var router = express.Router();
+
+    router.route('/')
+      .get(function(req, res) {
+        res.end();
+      })
+      .all(function(req, res) {
+        res.end();
+      })
+      .post(function(req, res) {
+        res.end();
+      });
+
+    router.route('/testing')
+      .all(function(req, res) {
+        res.end();
+      })
+      .delete(function(req, res) {
+        res.end();
+      });
+
+    endpoints = listEndpoints(router.stack);
 
     describe('should retrieve an array', function() {
       endpoints.should.not.be.empty;
@@ -81,6 +83,109 @@ describe('express-list-endpoints', function() {
             });
           });
         });
+      });
+    });
+  });
+
+  describe('when the defined routes', function() {
+    describe('contains underscores', function() {
+      var router = express.Router();
+      var endpoints;
+
+      router.get('/some_route', function(req, res) {
+        res.end();
+      });
+
+      router.get('/some_other_router', function(req, res) {
+        res.end();
+      });
+
+      router.get('/__last_route__', function(req, res) {
+        res.end();
+      });
+
+      endpoints = listEndpoints(router.stack);
+
+      it('should parse the endpoint corretly', function() {
+        endpoints[0].path.should.be.equal('/some_route');
+        endpoints[1].path.should.be.equal('/some_other_router');
+        endpoints[2].path.should.be.equal('/__last_route__');
+      });
+    });
+
+    describe('contains hyphens', function() {
+      var router = express.Router();
+      var endpoints;
+
+      router.get('/some-route', function(req, res) {
+        res.end();
+      });
+
+      router.get('/some-other-router', function(req, res) {
+        res.end();
+      });
+
+      router.get('/--last-route--', function(req, res) {
+        res.end();
+      });
+
+      endpoints = listEndpoints(router.stack);
+
+      it('should parse the endpoint corretly', function() {
+        endpoints[0].path.should.be.equal('/some-route');
+        endpoints[1].path.should.be.equal('/some-other-router');
+        endpoints[2].path.should.be.equal('/--last-route--');
+      });
+    });
+
+    describe('contains dots', function() {
+      var router = express.Router();
+      var endpoints;
+
+      router.get('/some.route', function(req, res) {
+        res.end();
+      });
+
+      router.get('/some.other.router', function(req, res) {
+        res.end();
+      });
+
+      router.get('/..last.route..', function(req, res) {
+        res.end();
+      });
+
+      endpoints = listEndpoints(router.stack);
+
+      it('should parse the endpoint corretly', function() {
+        console.log(endpoints);
+        endpoints[0].path.should.be.equal('/some.route');
+        endpoints[1].path.should.be.equal('/some.other.router');
+        endpoints[2].path.should.be.equal('/..last.route..');
+      });
+    });
+
+    describe('contains multiple different chars', function() {
+      var router = express.Router();
+      var endpoints;
+
+      router.get('/s0m3_r.oute', function(req, res) {
+        res.end();
+      });
+
+      router.get('/v1.0.0', function(req, res) {
+        res.end();
+      });
+
+      router.get('/not_sure.what-1m.d01ng', function(req, res) {
+        res.end();
+      });
+
+      endpoints = listEndpoints(router.stack);
+
+      it('should parse the endpoint corretly', function() {
+        endpoints[0].path.should.be.equal('/s0m3_r.oute');
+        endpoints[1].path.should.be.equal('/v1.0.0');
+        endpoints[2].path.should.be.equal('/not_sure.what-1m.d01ng');
       });
     });
   });
