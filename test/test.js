@@ -4,6 +4,8 @@ var listEndpoints = require('../index');
 var express = require('express');
 var expect = chai.expect;
 
+chai.should();
+
 describe('express-list-endpoints', function() {
   describe('when called over a router', function() {
     var endpoints;
@@ -156,7 +158,6 @@ describe('express-list-endpoints', function() {
       endpoints = listEndpoints(router.stack);
 
       it('should parse the endpoint corretly', function() {
-        console.log(endpoints);
         endpoints[0].path.should.be.equal('/some.route');
         endpoints[1].path.should.be.equal('/some.other.router');
         endpoints[2].path.should.be.equal('/..last.route..');

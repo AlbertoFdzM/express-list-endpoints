@@ -1,5 +1,4 @@
 var express = require('express');
-var router = express.Router();
 
 /**
  * Print in console all the verbs detected for the passed route
@@ -27,7 +26,6 @@ var getEndpoints = function(routerStack, path, endpoints) {
   path = path || '';
 
   routerStack.forEach(function(val) {
-    var methods = [];
     var newPath = regExp.exec(val.regexp);
 
     if (val.route) {
