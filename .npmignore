@@ -1,2 +1,3 @@
 test
-CHANGELOG.md
+.eslintrc
+.travis.yml

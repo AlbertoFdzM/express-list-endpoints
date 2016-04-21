@@ -1,3 +1,7 @@
+# [UNRELEASED]
+
+  * Implemented [Travis CI](https://travis-ci.org/) to the project.
+
 # 1.1.1 / 2016-04-21
 
   * Updated dependencies
