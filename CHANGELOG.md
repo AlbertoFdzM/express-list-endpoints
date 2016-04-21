@@ -1,6 +1,7 @@
 # [UNRELEASED]
 
-  * Implemented [Travis CI](https://travis-ci.org/) to the project.
+  * Implemented [Travis CI](https://travis-ci.org/) on the project.
+  * Implemented [CodeCov](https://codecov.io/) on the project.
 
 # 1.1.1 / 2016-04-21
 

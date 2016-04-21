@@ -7,3 +7,6 @@ node_js:
   - "4.3"
   - "4.2"
   - "0.12"
+before_script:
+  - npm install -g istanbul codecov
+script: istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && codecov
