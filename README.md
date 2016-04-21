@@ -1,5 +1,9 @@
 # Express List Endpoints
 
+[![Build Status](https://travis-ci.org/AlbertoFdzM/express-list-endpoints.svg?branch=master)](https://travis-ci.org/AlbertoFdzM/express-list-endpoints) [![codecov.io](https://codecov.io/github/AlbertoFdzM/express-list-endpoints/coverage.svg?branch=master)](https://codecov.io/github/AlbertoFdzM/express-list-endpoints?branch=master) [![bitHound Overall Score](https://www.bithound.io/github/AlbertoFdzM/express-list-endpoints/badges/score.svg)](https://www.bithound.io/github/AlbertoFdzM/express-list-endpoints)
+
+[![NPM](https://nodei.co/npm/express-list-endpoints.png)](https://nodei.co/npm/express-list-endpoints/)
+
 Express endpoint parser to retrieve a list of the passed router with the set verbs.
 
 ## Example of use
