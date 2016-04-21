@@ -4,7 +4,9 @@
   "description": "A express package to list all registered endoints and its verbs",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "preversion": "npm test",
+    "postversion": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
