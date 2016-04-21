@@ -1,5 +1,3 @@
-var express = require('express');
-
 /**
  * Print in console all the verbs detected for the passed route
  */

@@ -26,9 +26,7 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "eslint": "^2.8.0",
-    "mocha": "^2.3.4"
-  },
-  "dependencies": {
+    "mocha": "^2.3.4",
     "express": "^4.13.3"
   }
 }
