@@ -1,9 +1,8 @@
+/* eslint-env mocha */
 var chai = require('chai');
 var listEndpoints = require('../index');
 var express = require('express');
-var assert = chai.assert;
 var expect = chai.expect;
-var should = chai.should();
 
 describe('express-list-endpoints', function() {
   describe('when called over a router', function() {
