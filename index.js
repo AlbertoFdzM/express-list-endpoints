@@ -1,12 +1,11 @@
 /**
  * Print in console all the verbs detected for the passed route
  */
-var getRouteMethods = function(route, options) {
+var getRouteMethods = function(route) {
   var methods = [];
-  options = options || {};
 
   for (var method in route.methods) {
-    if (!options.withAll && method === '_all') {continue;}
+    if (method === '_all') {continue;}
 
     methods.push(method.toUpperCase());
   }
@@ -30,7 +29,7 @@ var getEndpoints = function(app, path, endpoints) {
     if (val.route) {
       endpoints.push({
         path: path + val.route.path,
-        methods: getRouteMethods(val.route, {prefix: path})
+        methods: getRouteMethods(val.route)
       });
 
     } else if (val.name === 'router' || val.name === 'bound dispatch') {
