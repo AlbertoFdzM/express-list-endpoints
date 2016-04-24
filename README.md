@@ -38,6 +38,14 @@ console.log(listEndpoints(router.stack));
 */
 ```
 
+## Arguments
+
+### `app` or `router` instance
+
+Your router instance (`router`) or your app instance (`app`).
+
+_**Note:** Pay attention that before call this script the router or app must have the endpoints registered due to detect them._
+
 ## license
 
 MIT

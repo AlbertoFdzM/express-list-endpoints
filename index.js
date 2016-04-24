@@ -17,13 +17,14 @@ var getRouteMethods = function(route, options) {
 /**
  * Return an array if strings with all the detected endpoints
  */
-var getEndpoints = function(routerStack, path, endpoints) {
+var getEndpoints = function(app, path, endpoints) {
   var regExp = /^\/\^\\\/(?:((?:\w|\\\.|-)*)|(\(\?:\(\[\^\\\/\]\+\?\)\)))\\\/.*/;
+  var stack = app.stack || app._router && app._router.stack;
 
   endpoints = endpoints || [];
   path = path || '';
 
-  routerStack.forEach(function(val) {
+  stack.forEach(function(val) {
     var newPath = regExp.exec(val.regexp);
 
     if (val.route) {
@@ -34,10 +35,10 @@ var getEndpoints = function(routerStack, path, endpoints) {
 
     } else if (val.name === 'router' || val.name === 'bound dispatch') {
       if (newPath) {
-        getEndpoints(val.handle.stack, path + '/' + newPath[1], endpoints);
+        getEndpoints(val.handle, path + '/' + newPath[1], endpoints);
 
       } else {
-        getEndpoints(val.handle.stack, path, endpoints);
+        getEndpoints(val.handle, path, endpoints);
       }
     }
   });

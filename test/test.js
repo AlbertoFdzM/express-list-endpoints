@@ -6,10 +6,90 @@ var expect = chai.expect;
 
 chai.should();
 
-describe('express-list-endpoints', function() {
-  describe('when called over a router', function() {
-    var endpoints;
+function checkResults(endpoints) {
+  describe('should retrieve an array', function() {
+    endpoints.should.not.be.empty;
+    endpoints.should.be.an('array');
+    endpoints.should.have.length(2);
 
+    it('of objects', function() {
+      endpoints.forEach(function(endpoint) {
+        endpoint.should.not.be.empty;
+        endpoint.should.be.an('object');
+      });
+    });
+
+    describe('with the app endpoints', function() {
+      endpoints.forEach(function(endpoint) {
+
+        describe('containing', function() {
+
+          describe('the path', function() {
+            it('as a string', function() {
+              endpoint.path.should.not.be.empty;
+              endpoint.path.should.be.a('string');
+            });
+
+            it('with the slashs', function() {
+              endpoint.path.should.contains('/');
+            });
+          });
+
+          describe('the methods', function() {
+            it('as an array', function() {
+              endpoint.methods.should.not.be.empty;
+              endpoint.methods.should.be.an('array');
+            });
+
+            endpoint.methods.forEach(function(method) {
+              it('of strings', function() {
+                method.should.not.be.empty;
+                method.should.be.a('string');
+              });
+
+              it('in uppercase', function() {
+                expect(method).to.be.equal(method.toUpperCase());
+              });
+
+              it('excluding the _all ones', function() {
+                expect(method).to.not.be.equal('_ALL');
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+}
+
+describe('express-list-endpoints', function() {
+
+  describe('when called over an app', function() {
+    var app = express();
+
+    app.route('/')
+      .get(function(req, res) {
+        res.end();
+      })
+      .all(function(req, res) {
+        res.end();
+      })
+      .post(function(req, res) {
+        res.end();
+      });
+
+    app.route('/testing')
+      .all(function(req, res) {
+        res.end();
+      })
+      .delete(function(req, res) {
+        res.end();
+      });
+
+    checkResults(listEndpoints(app));
+  });
+
+  describe('when called over a router', function() {
     var router = express.Router();
 
     router.route('/')
@@ -31,61 +111,35 @@ describe('express-list-endpoints', function() {
         res.end();
       });
 
-    endpoints = listEndpoints(router.stack);
+    checkResults(listEndpoints(router));
+  });
 
-    describe('should retrieve an array', function() {
-      endpoints.should.not.be.empty;
-      endpoints.should.be.an('array');
-      endpoints.should.have.length(2);
+  describe('when called over an app with mounted routers', function() {
+    var app = express();
+    var router = express.Router();
 
-      it('of objects', function() {
-        endpoints.forEach(function(endpoint) {
-          endpoint.should.not.be.empty;
-          endpoint.should.be.an('object');
-        });
+    app.route('/testing')
+      .all(function(req, res) {
+        res.end();
+      })
+      .delete(function(req, res) {
+        res.end();
       });
 
-      describe('with the router endpoints', function() {
-        endpoints.forEach(function(endpoint) {
-
-          describe('containing', function() {
-
-            describe('the path', function() {
-              it('as a string', function() {
-                endpoint.path.should.not.be.empty;
-                endpoint.path.should.be.a('string');
-              });
-
-              it('with the slashs', function() {
-                endpoint.path.should.contains('/');
-              });
-            });
-
-            describe('the methods', function() {
-              it('as an array', function() {
-                endpoint.methods.should.not.be.empty;
-                endpoint.methods.should.be.an('array');
-              });
-
-              endpoint.methods.forEach(function(method) {
-                it('of strings', function() {
-                  method.should.not.be.empty;
-                  method.should.be.a('string');
-                });
-
-                it('in uppercase', function() {
-                  expect(method).to.be.equal(method.toUpperCase());
-                });
-
-                it('excluding the _all ones', function() {
-                  expect(method).to.not.be.equal('_ALL');
-                });
-              });
-            });
-          });
-        });
+    router.route('/')
+      .get(function(req, res) {
+        res.end();
+      })
+      .all(function(req, res) {
+        res.end();
+      })
+      .post(function(req, res) {
+        res.end();
       });
-    });
+
+    app.use('/router', router);
+
+    checkResults(listEndpoints(app));
   });
 
   describe('when the defined routes', function() {
@@ -105,7 +159,7 @@ describe('express-list-endpoints', function() {
         res.end();
       });
 
-      endpoints = listEndpoints(router.stack);
+      endpoints = listEndpoints(router);
 
       it('should parse the endpoint corretly', function() {
         endpoints[0].path.should.be.equal('/some_route');
@@ -130,7 +184,7 @@ describe('express-list-endpoints', function() {
         res.end();
       });
 
-      endpoints = listEndpoints(router.stack);
+      endpoints = listEndpoints(router);
 
       it('should parse the endpoint corretly', function() {
         endpoints[0].path.should.be.equal('/some-route');
@@ -155,7 +209,7 @@ describe('express-list-endpoints', function() {
         res.end();
       });
 
-      endpoints = listEndpoints(router.stack);
+      endpoints = listEndpoints(router);
 
       it('should parse the endpoint corretly', function() {
         endpoints[0].path.should.be.equal('/some.route');
@@ -180,7 +234,7 @@ describe('express-list-endpoints', function() {
         res.end();
       });
 
-      endpoints = listEndpoints(router.stack);
+      endpoints = listEndpoints(router);
 
       it('should parse the endpoint corretly', function() {
         endpoints[0].path.should.be.equal('/s0m3_r.oute');

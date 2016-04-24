@@ -1,7 +1,8 @@
 # [UNRELEASED]
 
-  * Implemented [Travis CI](https://travis-ci.org/) on the project.
-  * Implemented [CodeCov](https://codecov.io/) on the project.
+  * Implemented [Travis CI](https://travis-ci.org/) on the project. #3
+  * Implemented [CodeCov](https://codecov.io/) on the project. #4
+  * Now the passed arguments are the `app` or `router` instance. #5
 
 # 1.1.1 / 2016-04-21
 
