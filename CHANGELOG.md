@@ -1,3 +1,7 @@
+# [UNRELEASED]
+
+  * Fix typos in README file #6
+
 # 2.0.0 / 2016-04-24
 
   * Implemented [Travis CI](https://travis-ci.org/) on the project. #3

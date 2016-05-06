@@ -9,7 +9,9 @@ Express endpoint parser to retrieve a list of the passed router with the set ver
 ## Example of use
 
 ```javascript
-router.route('/')
+var app = require('express')();
+
+app.route('/')
   .all(function(req, res) {
     // Handle request
   })
@@ -20,12 +22,12 @@ router.route('/')
     // Handle request
   });
 
-router.route('/about')
+app.route('/about')
   .get(function(req, res) {
     // Handle request
   });
 
-console.log(listEndpoints(router.stack));
+console.log(listEndpoints(app));
 /* It omits the 'all' verbs.
 [{
     path: '/',
@@ -40,7 +42,7 @@ console.log(listEndpoints(router.stack));
 
 ## Arguments
 
-### `app` or `router` instance
+### app - Express `app` or `router` instance
 
 Your router instance (`router`) or your app instance (`app`).
 
