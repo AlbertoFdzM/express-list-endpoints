@@ -43,7 +43,7 @@ console.log(listEndpoints(app));
 
 ## Arguments
 
-### app - Express `app` or `router` instance
+### `app` - Express `app` or `router` instance
 
 Your router instance (`router`) or your app instance (`app`).
 
