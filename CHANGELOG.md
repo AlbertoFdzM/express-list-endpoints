@@ -1,6 +1,7 @@
 # [UNRELEASED]
 
   * Fix typos in README file #6
+  * Improve README file #7
 
 # 2.0.0 / 2016-04-24
 
