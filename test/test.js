@@ -276,12 +276,14 @@ describe('express-list-endpoints', function() {
     });
 
     app.use('/multi/level', router);
+    app.use('/super/duper/multi/level', router);
 
     endpoints = listEndpoints(app);
 
     it('should retrieve the correct built path', function() {
-      expect(endpoints).to.have.length(1);
+      expect(endpoints).to.have.length(2);
       expect(endpoints[0].path).to.be.equal('/multi/level/my/path');
+      expect(endpoints[1].path).to.be.equal('/super/duper/multi/level/my/path');
     });
   });
 });

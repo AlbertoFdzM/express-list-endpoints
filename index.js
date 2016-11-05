@@ -17,7 +17,7 @@ var getRouteMethods = function(route) {
  * Return an array of strings with all the detected endpoints
  */
 var getEndpoints = function(app, path, endpoints) {
-  var regExp = /^\/\^\\\/(?:([\w\\\.\-]*(?:\\\/[\w\\\.\-]*))|(\(\?:\(\[\^\\\/\]\+\?\)\)))\\\/.*/;
+  var regExp = /^\/\^\\\/(?:([\w\\\.\-]*(?:\\\/[\w\\\.\-]*)*)|(\(\?:\(\[\^\\\/\]\+\?\)\)))\\\/.*/;
   var stack = app.stack || app._router && app._router.stack;
 
   endpoints = endpoints || [];
@@ -34,7 +34,7 @@ var getEndpoints = function(app, path, endpoints) {
 
     } else if (val.name === 'router' || val.name === 'bound dispatch') {
       if (newPath) {
-        var parsedPath = newPath[1].replace('\\/', '/');
+        var parsedPath = newPath[1].replace(/\\\//g, '/');
 
         getEndpoints(val.handle, path + '/' + parsedPath, endpoints);
 
