@@ -285,5 +285,45 @@ describe('express-list-endpoints', function() {
       expect(endpoints[0].path).to.be.equal('/multi/level/my/path');
       expect(endpoints[1].path).to.be.equal('/super/duper/multi/level/my/path');
     });
+
+    describe('with params', function () {
+      var endpoints;
+      var app = express();
+      var router = express.Router();
+
+      router.get('/users/:id', function(req, res) {
+        res.end();
+      });
+
+      router.get('/super/users/:id', function(req, res) {
+        res.end();
+      });
+
+      app.use('/multi/level', router);
+
+      endpoints = listEndpoints(app);
+
+      it('should retrieve the correct built path', function() {
+        expect(endpoints).to.have.length(2);
+        expect(endpoints[0].path).to.be.equal('/multi/level/users/:id');
+        expect(endpoints[1].path).to.be.equal('/multi/level/super/users/:id');
+      });
+    });
+  });
+
+  describe('when called over a route with params', function() {
+    var endpoints;
+    var app = express();
+
+    app.get('/users/:id', function(req, res) {
+      res.end();
+    });
+
+    endpoints = listEndpoints(app);
+
+    it('should retrieve the correct built path', function() {
+      expect(endpoints).to.have.length(1);
+      expect(endpoints[0].path).to.be.equal('/users/:id');
+    });
   });
 });
