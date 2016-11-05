@@ -1,6 +1,6 @@
 {
   "name": "express-list-endpoints",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A express package to list all registered endoints and its verbs",
   "main": "index.js",
   "scripts": {
