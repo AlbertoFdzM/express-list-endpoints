@@ -279,7 +279,7 @@ describe('express-list-endpoints', function() {
 
     endpoints = listEndpoints(app);
 
-    it('should retrieve the multi-level path', function() {
+    it('should retrieve the correct built path', function() {
       expect(endpoints).to.have.length(1);
       expect(endpoints[0].path).to.be.equal('/multi/level/my/path');
     });

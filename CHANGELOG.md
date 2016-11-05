@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * Fix typos in README file #6
   * Improve README file #7
 
+### Fixed 🐛
+  * Multi-level basePaths are now parsed correctly #10
+
 ## 2.0.0 - 2016-04-24
 
   * Implemented [Travis CI](https://travis-ci.org/) on the project. #3
