@@ -265,4 +265,23 @@ describe('express-list-endpoints', function() {
       expect(endpoints[0].methods[0]).to.be.equal('GET');
     });
   });
+
+  describe('when called over a multi-level base route', function() {
+    var endpoints;
+    var app = express();
+    var router = express.Router();
+
+    router.get('/my/path', function(req, res) {
+      res.end();
+    });
+
+    app.use('/multi/level', router);
+
+    endpoints = listEndpoints(app);
+
+    it('should retrieve the multi-level path', function() {
+      expect(endpoints).to.have.length(1);
+      expect(endpoints[0].path).to.be.equal('/multi/level/my/path');
+    });
+  });
 });
