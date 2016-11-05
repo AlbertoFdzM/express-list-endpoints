@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [UNRELEASED]
 
 ### Changed
+  * Update dependencies
   * Fix typos in README file #6
   * Improve README file #7
 
