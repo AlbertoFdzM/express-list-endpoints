@@ -6,7 +6,9 @@
   "scripts": {
     "test": "mocha",
     "preversion": "npm test",
-    "postversion": "git push --follow-tags"
+    "version": "npm run build && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags",
+    "build": "node ./scripts/build.js"
   },
   "repository": {
     "type": "git",
