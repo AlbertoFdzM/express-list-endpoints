@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+### BREAKING CHANGES
+* Removed support for Node v0.12
+
 ### 🐛 Fixed
   * Now the params set in middle of a pattern get parsed #17
 
