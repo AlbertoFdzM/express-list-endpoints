@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * Move main file to `src` folder
   * Add lint script
   * Ignore editorconfig file for npm relases
+  * Changed codestyle to [standard](http://standardjs.com/)
 
 ### Changed
   * Add more test cases.
