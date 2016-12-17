@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * Add lint script
   * Ignore editorconfig file for npm relases
   * Changed codestyle to [standard](http://standardjs.com/)
+  * Implemented [Yarn](https://yarnpkg.com) on the project
 
 ### Changed
   * Add more test cases.
