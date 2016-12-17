@@ -6,4 +6,4 @@ node_js:
   - "0.12"
 before_script:
   - npm install -g istanbul codecov
-script: istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && codecov
+script: npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && codecov

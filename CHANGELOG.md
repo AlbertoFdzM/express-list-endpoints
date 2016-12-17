@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+### Dev
+  * Move main file to `src` folder
+  * Add lint script
+
 ### Changed
   * Add more test cases.
 

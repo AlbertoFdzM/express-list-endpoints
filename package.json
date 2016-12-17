@@ -2,10 +2,11 @@
   "name": "express-list-endpoints",
   "version": "2.0.3",
   "description": "A express package to list all registered endoints and its verbs",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "lint": "eslint --ignore-path .gitignore **/*.js",
     "test": "mocha",
-    "preversion": "npm test",
+    "preversion": "npm run lint && npm test",
     "version": "npm run build && git add CHANGELOG.md",
     "postversion": "git push --follow-tags",
     "build": "node ./scripts/build.js"

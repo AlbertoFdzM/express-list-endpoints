@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 var chai = require('chai');
-var listEndpoints = require('../index');
+var listEndpoints = require('../src/index');
 var express = require('express');
 var expect = chai.expect;
 
