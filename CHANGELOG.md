@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Dev
   * Move main file to `src` folder
   * Add lint script
+  * Ignore editorconfig file for npm relases
 
 ### Changed
   * Add more test cases.

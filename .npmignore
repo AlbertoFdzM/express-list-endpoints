@@ -1,4 +1,5 @@
 scripts
 test
+.editorconfig
 .eslintrc
 .travis.yml
