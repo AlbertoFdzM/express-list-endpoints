@@ -7,12 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+### 🐛 Fixed
+  * Now the params set in middle of a pattern get parsed #17
+
 ### Dev
   * Move main file to `src` folder
   * Add lint script
   * Ignore editorconfig file for npm relases
-  * Changed codestyle to [standard](http://standardjs.com/)
-  * Implemented [Yarn](https://yarnpkg.com) on the project
+  * Changed codestyle to [standard](http://standardjs.com/) #18
+  * Implemented [Yarn](https://yarnpkg.com) on the project #19
 
 ### Changed
   * Add more test cases.

@@ -137,6 +137,47 @@ describe('express-list-endpoints', function () {
     app.use('/router', router)
 
     checkResults(listEndpoints(app))
+
+    describe('and some of the routers has the option `mergeParams`', function () {
+      var app = express()
+      var router = express.Router({ mergeParams: true })
+      var endpoints
+
+      router.get('/:id/friends', function (req, res) {
+        res.end()
+      })
+
+      app.use('/router', router)
+
+      endpoints = listEndpoints(app)
+
+      it('should parse the endpoints corretly', function () {
+        expect(endpoints).to.have.length(1)
+        expect(endpoints[0].path).to.be.equal('/router/:id/friends')
+      })
+
+      describe('and also has a sub-router on the router', function () {
+        var app = express()
+        var router = express.Router({ mergeParams: true })
+        var subRouter = express.Router()
+        var endpoints
+
+        subRouter.get('/', function (req, res) {
+          res.end()
+        })
+
+        app.use('/router', router)
+
+        router.use('/:postId/sub-router', subRouter)
+
+        endpoints = listEndpoints(app)
+
+        it('should parse the endpoints corretly', function () {
+          expect(endpoints).to.have.length(1)
+          expect(endpoints[0].path).to.be.equal('/router/:postId/sub-router')
+        })
+      })
+    })
   })
 
   describe('when the defined routes', function () {
@@ -306,6 +347,25 @@ describe('express-list-endpoints', function () {
         expect(endpoints[1].path).to.be.equal('/multi/level/super/users/:id')
       })
     })
+
+    describe('with params in middle of the pattern', function () {
+      var endpoints
+      var app = express()
+      var router = express.Router()
+
+      router.get('/super/users/:id/friends', function (req, res) {
+        res.end()
+      })
+
+      app.use('/multi/level', router)
+
+      endpoints = listEndpoints(app)
+
+      it('should retrieve the correct built path', function () {
+        expect(endpoints).to.have.length(1)
+        expect(endpoints[0].path).to.be.equal('/multi/level/super/users/:id/friends')
+      })
+    })
   })
 
   describe('when called over a route with params', function () {
@@ -321,6 +381,22 @@ describe('express-list-endpoints', function () {
     it('should retrieve the correct built path', function () {
       expect(endpoints).to.have.length(1)
       expect(endpoints[0].path).to.be.equal('/users/:id')
+    })
+  })
+
+  describe('when called over a route with params in middle of the pattern', function () {
+    var endpoints
+    var app = express()
+
+    app.get('/users/:id/friends', function (req, res) {
+      res.end()
+    })
+
+    endpoints = listEndpoints(app)
+
+    it('should retrieve the correct built path', function () {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/users/:id/friends')
     })
   })
 })

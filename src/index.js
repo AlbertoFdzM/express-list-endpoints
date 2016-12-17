@@ -1,3 +1,5 @@
+// var debug = require('debug')('express-list-endpoints')
+
 /**
  * Print in console all the verbs detected for the passed route
  */
@@ -14,26 +16,49 @@ var getRouteMethods = function (route) {
 }
 
 /**
+ * Return true if found regexp related with express params
+ */
+var hasParams = function (value) {
+  var regExp = /\(\?:\(\[\^\\\/]\+\?\)\)/g
+  return regExp.test(value)
+}
+
+/**
  * Return an array of strings with all the detected endpoints
  */
 var getEndpoints = function (app, path, endpoints) {
-  var regExp = /^\/\^\\\/(?:([\w\\.-]*(?:\\\/[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
+  var regExp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
   var stack = app.stack || app._router && app._router.stack
 
   endpoints = endpoints || []
   path = path || ''
 
   stack.forEach(function (val) {
-    var newPath = regExp.exec(val.regexp)
-
     if (val.route) {
       endpoints.push({
-        path: path + val.route.path,
+        path: path + (path && val.route.path === '/' ? '' : val.route.path),
         methods: getRouteMethods(val.route)
       })
     } else if (val.name === 'router' || val.name === 'bound dispatch') {
+      var newPath = regExp.exec(val.regexp)
+
       if (newPath) {
-        var parsedPath = newPath[1].replace(/\\\//g, '/')
+        var parsedRegexp = val.regexp
+        var keyIndex = 0
+        var parsedPath
+
+        while (hasParams(parsedRegexp)) {
+          parsedRegexp = val.regexp.toString().replace(/\(\?:\(\[\^\\\/]\+\?\)\)/g, ':' + val.keys[keyIndex].name)
+          keyIndex++
+        }
+
+        if (parsedRegexp !== val.regexp) {
+          newPath = regExp.exec(parsedRegexp)
+        }
+
+        parsedPath = newPath[1].replace(/\\\//g, '/')
+
+        if (parsedPath === ':postId/sub-router') console.log(val)
 
         getEndpoints(val.handle, path + '/' + parsedPath, endpoints)
       } else {
