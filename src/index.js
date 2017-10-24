@@ -48,7 +48,7 @@ var getEndpoints = function (app, path, endpoints) {
         var parsedPath
 
         while (hasParams(parsedRegexp)) {
-          parsedRegexp = val.regexp.toString().replace(/\(\?:\(\[\^\\\/]\+\?\)\)/g, ':' + val.keys[keyIndex].name)
+          parsedRegexp = parsedRegexp.toString().replace(/\(\?:\(\[\^\\\/]\+\?\)\)/, ':' + val.keys[keyIndex].name)
           keyIndex++
         }
 
