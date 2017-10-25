@@ -5,10 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [UNRELEASED]
+
+### 🐛 Fixed
+  * Fix params on Base route with multi-level routing
+
+### Changed
+  * Update devDependencies
+
+
 ## v3.0.0 - 2016-12-18
 
 ### BREAKING CHANGES
-* Removed support for Node v0.12
+  * Removed support for Node v0.12
 
 ### 🐛 Fixed
   * Now the params set in middle of a pattern get parsed #17
@@ -23,10 +32,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
   * Add more test cases.
 
+
 ## v2.0.3 - 2016-11-05
 
 ### 🐛 Fixed
   * Super multi-level baseRoutes handled #10
+
 
 ## v2.0.1 - 2016-11-05
 
@@ -37,6 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed 🐛
   * Multi-level basePaths are now parsed correctly #10
+
 
 ## 2.0.0 - 2016-04-24
 
@@ -50,19 +62,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * Now express is a development dependency
   * Improved tests
 
+
 ## 1.1.0 - 2016-04-20
 
   * Improved regexp to parse express router. #1
   * Added [editorconfig](http://editorconfig.org) file.
 
+
 ## 1.0.1 - 2016-01-18
 
   * Update package version
+
 
 ## 1.0.0 - 2016-01-18
 
   * Add changelog file
   * Improve README file
+
 
 ## 0.0.0 - 2016-01-18
 

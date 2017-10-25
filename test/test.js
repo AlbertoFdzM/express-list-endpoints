@@ -297,8 +297,8 @@ describe('express-list-endpoints', function () {
 
     it('should retrieve the list of endpoints and its methods', function () {
       expect(endpoints).to.have.length(1)
-      expect(endpoints[0]).to.have.path
-      expect(endpoints[0]).to.have.methods
+      expect(endpoints[0]).to.have.own.property('path')
+      expect(endpoints[0]).to.have.own.property('methods')
       expect(endpoints[0].path).to.be.equal('/')
       expect(endpoints[0].methods[0]).to.be.equal('GET')
     })
