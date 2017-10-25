@@ -337,14 +337,14 @@ describe('express-list-endpoints', function () {
         res.end()
       })
 
-      app.use('/multi/level', router)
+      app.use('/multi/:multiId/level/:levelId', router)
 
       endpoints = listEndpoints(app)
 
       it('should retrieve the correct built path', function () {
         expect(endpoints).to.have.length(2)
-        expect(endpoints[0].path).to.be.equal('/multi/level/users/:id')
-        expect(endpoints[1].path).to.be.equal('/multi/level/super/users/:id')
+        expect(endpoints[0].path).to.be.equal('/multi/:multiId/level/:levelId/users/:id')
+        expect(endpoints[1].path).to.be.equal('/multi/:multiId/level/:levelId/super/users/:id')
       })
     })
 
