@@ -8,12 +8,14 @@ chai.should()
 
 function checkResults (endpoints) {
   describe('should retrieve an array', function () {
+    // eslint-disable-next-line no-unused-expressions
     endpoints.should.not.be.empty
     endpoints.should.be.an('array')
     endpoints.should.have.length(2)
 
     it('of objects', function () {
       endpoints.forEach(function (endpoint) {
+        // eslint-disable-next-line no-unused-expressions
         endpoint.should.not.be.empty
         endpoint.should.be.an('object')
       })
@@ -24,6 +26,7 @@ function checkResults (endpoints) {
         describe('containing', function () {
           describe('the path', function () {
             it('as a string', function () {
+              // eslint-disable-next-line no-unused-expressions
               endpoint.path.should.not.be.empty
               endpoint.path.should.be.a('string')
             })
@@ -35,12 +38,14 @@ function checkResults (endpoints) {
 
           describe('the methods', function () {
             it('as an array', function () {
+              // eslint-disable-next-line no-unused-expressions
               endpoint.methods.should.not.be.empty
               endpoint.methods.should.be.an('array')
             })
 
             endpoint.methods.forEach(function (method) {
               it('of strings', function () {
+                // eslint-disable-next-line no-unused-expressions
                 method.should.not.be.empty
                 method.should.be.a('string')
               })

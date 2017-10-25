@@ -28,7 +28,7 @@ var hasParams = function (value) {
  */
 var getEndpoints = function (app, path, endpoints) {
   var regExp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
-  var stack = app.stack || app._router && app._router.stack
+  var stack = app.stack || (app._router && app._router.stack)
 
   endpoints = endpoints || []
   path = path || ''
