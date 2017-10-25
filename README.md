@@ -10,7 +10,9 @@ Express endpoint parser to retrieve a list of the passed router with the set ver
 ## Example of use
 
 ```javascript
-var app = require('express')();
+const listEndpoints = require('express-list-endpoints')
+
+let app = require('express')();
 
 app.route('/')
   .all(function(req, res) {
