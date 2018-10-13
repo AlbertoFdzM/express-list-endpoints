@@ -7,9 +7,8 @@
     "lint": "eslint --ignore-path .gitignore **/*.js",
     "test": "mocha",
     "preversion": "npm run lint && npm test",
-    "version": "npm run build && git add CHANGELOG.md",
-    "postversion": "git push --follow-tags",
-    "build": "node ./scripts/build.js"
+    "version": "changelog-version && git add CHANGELOG.md",
+    "postversion": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
@@ -30,6 +29,7 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.1.2",
+    "changelog-version": "^1.0.1",
     "eslint": "^4.1.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.8.0",
