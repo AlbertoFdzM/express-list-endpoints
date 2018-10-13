@@ -4,7 +4,7 @@
   "description": "A express package to list all registered endoints and its verbs",
   "main": "src/index.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore **/*.js",
+    "lint": "eslint '**/*.js'",
     "test": "mocha",
     "preversion": "npm run lint && npm test",
     "version": "changelog-version && git add CHANGELOG.md",
