@@ -27,6 +27,7 @@
   ],
   "author": "Alberto Fernandez <albertofdzm@gmail.com>",
   "license": "MIT",
+  "engines" : { "node" : ">=6" },
   "devDependencies": {
     "chai": "^4.2.0",
     "changelog-version": "^1.0.1",
