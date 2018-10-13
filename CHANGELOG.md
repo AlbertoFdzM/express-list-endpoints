@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Replace build script that versions the changelog for [`changelog-version`](https://www.npmjs.com/package/changelog-version) package #36
+- Update devDependencies
 
 
 ## v3.0.1 - 2017-10-25
