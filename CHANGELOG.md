@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update devDependencies
 - Improve code readability
 
+### BREAKING CHANGES
+- Drop support for NodeJS v4
+
 
 ## v3.0.1 - 2017-10-25
 
