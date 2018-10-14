@@ -1,6 +1,6 @@
 {
   "name": "express-list-endpoints",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "A express package to list all registered endoints and its verbs",
   "main": "src/index.js",
   "scripts": {
@@ -27,7 +27,9 @@
   ],
   "author": "Alberto Fernandez <albertofdzm@gmail.com>",
   "license": "MIT",
-  "engines" : { "node" : ">=6" },
+  "engines": {
+    "node": ">=6"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "changelog-version": "^1.0.1",

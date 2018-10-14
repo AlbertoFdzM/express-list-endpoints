@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 -->
 
-## [UNRELEASED]
+## v4.0.0 - 2018-10-14
 
 ### Changed
 - Replace build script that versions the changelog for [`changelog-version`](https://www.npmjs.com/package/changelog-version) package #36
