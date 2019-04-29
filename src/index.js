@@ -86,11 +86,36 @@ var parseEndpoints = function (app, basePath, endpoints) {
 }
 
 /**
+ * @param {Array} endpoints
+ * @returns {Array}
+ */
+var cleanEndpoints = function (endpoints) {
+  var cleanedEndpoints = endpoints.reduce(function (acc, endpoint) {
+    var foundEndpointIdx = acc.findIndex(function (item) {
+      return item.path === endpoint.path
+    })
+
+    if (foundEndpointIdx > -1) {
+      acc[foundEndpointIdx].methods = acc[foundEndpointIdx].methods.concat(endpoint.methods)
+    } else {
+      acc.push(endpoint)
+    }
+
+    return acc
+  }, [])
+
+  return cleanedEndpoints
+}
+
+/**
  * Returns an array of strings with all the detected endpoints
- * @param {Object} app the express/route instance to get the endponts from
+ * @param {Object} app the express/route instance to get the endpoints from
  */
 var getEndpoints = function (app) {
-  return parseEndpoints(app)
+  var endpoints = parseEndpoints(app)
+  var cleanedEndpoints = cleanEndpoints(endpoints)
+
+  return cleanedEndpoints
 }
 
 module.exports = getEndpoints
