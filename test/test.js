@@ -404,4 +404,31 @@ describe('express-list-endpoints', function () {
       expect(endpoints[0].path).to.be.equal('/users/:id/friends')
     })
   })
+
+  describe('when called over a route with multiple methods with "/" path defined', () => {
+    var endpoints
+    var router = express.Router()
+
+    router
+      .post('/test', function (req, res) {
+        res.end()
+      })
+      .delete('/test', function (req, res) {
+        res.end()
+      })
+
+    endpoints = listEndpoints(router)
+
+    it('should retrieve the correct built path', function () {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/test')
+      expect(endpoints[0].methods[0]).to.be.equal('POST')
+    })
+
+    it('should retrieve the correct built methods', function () {
+      expect(endpoints[0].methods).to.have.length(2)
+      expect(endpoints[0].methods[0]).to.be.equal('POST')
+      expect(endpoints[0].methods[1]).to.be.equal('DELETE')
+    })
+  })
 })

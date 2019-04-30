@@ -42,7 +42,12 @@ var parseExpressPath = function (expressPathRegexp, params) {
   var paramIdx = 0
 
   while (hasParams(parsedRegexp)) {
-    parsedRegexp = parsedRegexp.toString().replace(/\(\?:\(\[\^\\\/]\+\?\)\)/, ':' + params[paramIdx].name)
+    var paramId = ':' + params[paramIdx].name
+
+    parsedRegexp = parsedRegexp
+      .toString()
+      .replace(/\(\?:\(\[\^\\\/]\+\?\)\)/, paramId)
+
     paramIdx++
   }
 
@@ -63,7 +68,9 @@ var parseEndpoints = function (app, basePath, endpoints) {
 
   stack.forEach(function (stackItem) {
     if (stackItem.route) {
-      endpoints.push(parseExpressRoute(stackItem.route, basePath))
+      var endpoint = parseExpressRoute(stackItem.route, basePath)
+
+      endpoints.push(endpoint)
     } else if (stackItem.name === 'router' || stackItem.name === 'bound dispatch') {
       if (regexpExpressRegexp.test(stackItem.regexp)) {
         var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
@@ -79,11 +86,36 @@ var parseEndpoints = function (app, basePath, endpoints) {
 }
 
 /**
+ * @param {Array} endpoints
+ * @returns {Array}
+ */
+var cleanEndpoints = function (endpoints) {
+  var cleanedEndpoints = endpoints.reduce(function (acc, endpoint) {
+    var foundEndpointIdx = acc.findIndex(function (item) {
+      return item.path === endpoint.path
+    })
+
+    if (foundEndpointIdx > -1) {
+      acc[foundEndpointIdx].methods = acc[foundEndpointIdx].methods.concat(endpoint.methods)
+    } else {
+      acc.push(endpoint)
+    }
+
+    return acc
+  }, [])
+
+  return cleanedEndpoints
+}
+
+/**
  * Returns an array of strings with all the detected endpoints
- * @param {Object} app the express/route instance to get the endponts from
+ * @param {Object} app the express/route instance to get the endpoints from
  */
 var getEndpoints = function (app) {
-  return parseEndpoints(app)
+  var endpoints = parseEndpoints(app)
+  var cleanedEndpoints = cleanEndpoints(endpoints)
+
+  return cleanedEndpoints
 }
 
 module.exports = getEndpoints
