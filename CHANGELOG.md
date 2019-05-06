@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 -->
 
+
+## v4.0.1 - 2019-05-06
+### Fixed
+- Add logic to avoid duplicate paths #40
+
+
 ## v4.0.0 - 2018-10-14
 
 ### Changed
