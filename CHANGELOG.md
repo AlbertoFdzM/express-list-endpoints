@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -->
 
 
+## [UNRELEASED]
+### BREAKING CHANGES
+- Drop support for NodeJS v6
+
+### Dev
+- Update dev dependencies
+
+
 ## v4.0.1 - 2019-05-06
 ### Fixed
 - Add logic to avoid duplicate paths #40
