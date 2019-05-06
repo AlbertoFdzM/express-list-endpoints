@@ -18,6 +18,16 @@ var getRouteMethods = function (route) {
 }
 
 /**
+ * Returns the names (or anonymous) of all the middleware attached to the
+ * passed route
+ */
+var getRouteMiddleware = function (route) {
+  return route.stack.map(function (item) {
+    return item.handle.name || 'anonymous'
+  })
+}
+
+/**
  * Returns true if found regexp related with express params
  */
 var hasParams = function (pathRegexp) {
@@ -32,7 +42,8 @@ var hasParams = function (pathRegexp) {
 var parseExpressRoute = function (route, basePath) {
   return {
     path: basePath + (basePath && route.path === '/' ? '' : route.path),
-    methods: getRouteMethods(route)
+    methods: getRouteMethods(route),
+    middleware: getRouteMiddleware(route)
   }
 }
 
