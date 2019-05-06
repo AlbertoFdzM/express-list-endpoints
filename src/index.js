@@ -70,7 +70,7 @@ var parseEndpoints = function (app, basePath, endpoints) {
     if (stackItem.route) {
       var endpoint = parseExpressRoute(stackItem.route, basePath)
 
-      endpoints.push(endpoint)
+      endpoints = addEndpoint(endpoints, endpoint)
     } else if (stackItem.name === 'router' || stackItem.name === 'bound dispatch') {
       if (regexpExpressRegexp.test(stackItem.regexp)) {
         var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
@@ -86,25 +86,28 @@ var parseEndpoints = function (app, basePath, endpoints) {
 }
 
 /**
- * @param {Array} endpoints
- * @returns {Array}
+ * Ensures the path of the new endpoint isn't yet in the array.
+ * If the path is already in the array merges the endpoint with the existing
+ * one, if not, it adds it to the array.
+ *
+ * @param {Array} endpoints Array of current endpoints
+ * @param {Object} newEndpoint New endpoint to be added to the array
+ * @returns {Array} Updated endpoints array
  */
-var cleanEndpoints = function (endpoints) {
-  var cleanedEndpoints = endpoints.reduce(function (acc, endpoint) {
-    var foundEndpointIdx = acc.findIndex(function (item) {
-      return item.path === endpoint.path
-    })
+var addEndpoint = function (endpoints, newEndpoint) {
+  var foundEndpointIdx = endpoints.findIndex(function (item) {
+    return item.path === newEndpoint.path
+  })
 
-    if (foundEndpointIdx > -1) {
-      acc[foundEndpointIdx].methods = acc[foundEndpointIdx].methods.concat(endpoint.methods)
-    } else {
-      acc.push(endpoint)
-    }
+  if (foundEndpointIdx > -1) {
+    var foundEndpoint = endpoints[foundEndpointIdx]
 
-    return acc
-  }, [])
+    foundEndpoint.methods = foundEndpoint.methods.concat(newEndpoint.methods)
+  } else {
+    endpoints.push(newEndpoint)
+  }
 
-  return cleanedEndpoints
+  return endpoints
 }
 
 /**
@@ -113,9 +116,8 @@ var cleanEndpoints = function (endpoints) {
  */
 var getEndpoints = function (app) {
   var endpoints = parseEndpoints(app)
-  var cleanedEndpoints = cleanEndpoints(endpoints)
 
-  return cleanedEndpoints
+  return endpoints
 }
 
 module.exports = getEndpoints
