@@ -174,12 +174,14 @@ describe('express-list-endpoints', function () {
         app.use('/router', router)
 
         router.use('/:postId/sub-router', subRouter)
+        router.use('/:postId([0-9]+)/sub-router2', subRouter)
 
         endpoints = listEndpoints(app)
 
         it('should parse the endpoints corretly', function () {
-          expect(endpoints).to.have.length(1)
+          expect(endpoints).to.have.length(2)
           expect(endpoints[0].path).to.be.equal('/router/:postId/sub-router')
+          expect(endpoints[1].path).to.be.equal('/router/:postId/sub-router2')
         })
       })
     })
