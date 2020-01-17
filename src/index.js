@@ -70,7 +70,7 @@ var parseEndpoints = function (app, basePath, endpoints) {
     if (stackItem.route) {
       var endpoint = parseExpressRoute(stackItem.route, basePath);
 
-      stackItem.route.jfpath = endpoint.path;
+      stackItem.route.completePath = endpoint.path;
 
       endpoints = addEndpoint(endpoints, endpoint)
     } else if (stackItem.name === 'router' || stackItem.name === 'bound dispatch') {
