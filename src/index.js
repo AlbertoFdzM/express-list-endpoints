@@ -71,7 +71,7 @@ var parseEndpoints = function (app, basePath, endpoints) {
       var endpoint = parseExpressRoute(stackItem.route, basePath)
 
       endpoints = addEndpoint(endpoints, endpoint)
-    } else if (stackItem.name === 'router' || stackItem.name === 'bound dispatch') {
+    } else if (stackItem.name === 'router' || stackItem.name === 'bound dispatch' || stackItem.name === 'app') {
       if (regexpExpressRegexp.test(stackItem.regexp)) {
         var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
 
