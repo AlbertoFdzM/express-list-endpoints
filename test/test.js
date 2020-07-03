@@ -431,4 +431,33 @@ describe('express-list-endpoints', function () {
       expect(endpoints[0].methods[1]).to.be.equal('DELETE')
     })
   })
+
+  describe('when called with middlewares', () => {
+    var endpoints
+    var router = express.Router()
+
+    var exampleMiddleware = function () {
+      console.log('middleware')
+    }
+
+    router
+      .post('/test', exampleMiddleware, function (req, res) {
+        res.end()
+      })
+
+    endpoints = listEndpoints(router)
+
+    it('should retrieve the correct built path', function () {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/test')
+      expect(endpoints[0].methods[0]).to.be.equal('POST')
+    })
+
+    it('should retrieve the correct middleware', function () {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].middleware).to.have.length(2)
+      expect(endpoints[0].middleware[0]).to.equal('exampleMiddleware')
+      expect(endpoints[0].middleware[1]).to.equal('anonymous')
+    })
+  })
 })
