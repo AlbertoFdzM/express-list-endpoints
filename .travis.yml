@@ -6,5 +6,5 @@ node_js:
   - '10'
   - '8'
 before_script:
-  - npm install -g istanbul codecov
-script: npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && codecov
+  - npm install -g nyc codecov
+script: npm run lint && nyc --reporter=json npm test && codecov
