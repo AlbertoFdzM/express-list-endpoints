@@ -16,11 +16,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [UNRELEASED]
-### BREAKING CHANGES
-- Drop support for NodeJS v6
+
+### Added
+- `mounted_app` is being parsed
+- Request handlers mounted on multiple routes by passing an array are being parsed
+- If a route path contains an unparseable regexp it is used to compose the path
+
+### Changed
+- Added `middlewares` property in reports representing mounted middlewares by their name
+
+### Fixed
+- Avoid method duplicity in the same path
+
+### Deprecated
+- **BREAKING** Drop support for NodeJS v6 and v8
+- Drop support for `yarn.lock` file
 
 ### Dev
 - Update dev dependencies
+- Improve tests structure
 
 
 ## v4.0.1 - 2019-05-06
