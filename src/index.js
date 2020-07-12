@@ -37,14 +37,32 @@ var hasParams = function (pathRegexp) {
 /**
  * @param {Object} route Express route object to be parsed
  * @param {string} basePath The basePath the route is on
- * @return {Object} Endpoint info
+ * @return {Object[]} Endpoints info
  */
 var parseExpressRoute = function (route, basePath) {
-  return {
-    path: basePath + (basePath && route.path === '/' ? '' : route.path),
-    methods: getRouteMethods(route),
-    middleware: getRouteMiddleware(route)
+  var endpoints = []
+
+  if (Array.isArray(route.path)) {
+    route.path.forEach((path) => {
+      var endpoint = {
+        path: basePath + (basePath && path === '/' ? '' : path),
+        methods: getRouteMethods(route),
+        middleware: getRouteMiddleware(route)
+      }
+
+      endpoints.push(endpoint)
+    })
+  } else {
+    var endpoint = {
+      path: basePath + (basePath && route.path === '/' ? '' : route.path),
+      methods: getRouteMethods(route),
+      middleware: getRouteMiddleware(route)
+    }
+
+    endpoints.push(endpoint)
   }
+
+  return endpoints
 }
 
 var parseExpressPath = function (expressPathRegexp, params) {
@@ -79,9 +97,9 @@ var parseEndpoints = function (app, basePath, endpoints) {
 
   stack.forEach(function (stackItem) {
     if (stackItem.route) {
-      var endpoint = parseExpressRoute(stackItem.route, basePath)
+      var newEndpoints = parseExpressRoute(stackItem.route, basePath)
 
-      endpoints = addEndpoint(endpoints, endpoint)
+      endpoints = addEndpoints(endpoints, newEndpoints)
     } else if (stackItem.name === 'router' || stackItem.name === 'bound dispatch') {
       if (regexpExpressRegexp.test(stackItem.regexp)) {
         var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
@@ -97,26 +115,28 @@ var parseEndpoints = function (app, basePath, endpoints) {
 }
 
 /**
- * Ensures the path of the new endpoint isn't yet in the array.
- * If the path is already in the array merges the endpoint with the existing
- * one, if not, it adds it to the array.
+ * Ensures the path of the new endpoints isn't yet in the array.
+ * If the path is already in the array merges the endpoints with the existing
+ * one, if not, it adds them to the array.
  *
  * @param {Array} endpoints Array of current endpoints
- * @param {Object} newEndpoint New endpoint to be added to the array
+ * @param {Object[]} newEndpoints New endpoints to be added to the array
  * @returns {Array} Updated endpoints array
  */
-var addEndpoint = function (endpoints, newEndpoint) {
-  var foundEndpointIdx = endpoints.findIndex(function (item) {
-    return item.path === newEndpoint.path
+var addEndpoints = function (endpoints, newEndpoints) {
+  newEndpoints.forEach(function (newEndpoint) {
+    var foundEndpointIdx = endpoints.findIndex(function (item) {
+      return item.path === newEndpoint.path
+    })
+
+    if (foundEndpointIdx > -1) {
+      var foundEndpoint = endpoints[foundEndpointIdx]
+
+      foundEndpoint.methods = foundEndpoint.methods.concat(newEndpoint.methods)
+    } else {
+      endpoints.push(newEndpoint)
+    }
   })
-
-  if (foundEndpointIdx > -1) {
-    var foundEndpoint = endpoints[foundEndpointIdx]
-
-    foundEndpoint.methods = foundEndpoint.methods.concat(newEndpoint.methods)
-  } else {
-    endpoints.push(newEndpoint)
-  }
 
   return endpoints
 }

@@ -529,4 +529,29 @@ describe('express-list-endpoints', () => {
       expect(endpoints[0].middleware[1]).to.equal('anonymous')
     })
   })
+
+  describe('when called with an array of paths', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+
+      app.get([
+        '/one',
+        '/two'
+      ], (req, res) => {
+        res.end()
+      })
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should list routes correctly', () => {
+      expect(endpoints).to.have.length(2)
+      expect(endpoints[0].path).to.be.equal('/one')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[1].path).to.be.equal('/two')
+      expect(endpoints[1].methods[0]).to.be.equal('GET')
+    })
+  })
 })
