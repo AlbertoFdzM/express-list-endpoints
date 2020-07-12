@@ -566,4 +566,34 @@ describe('express-list-endpoints', () => {
       expect(endpoints[1].methods[0]).to.be.equal('GET')
     })
   })
+
+  describe('when called with an app with a mounted sub-app', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+      const subApp = express()
+
+      app.get('/', (req, res) => {
+        res.end()
+      })
+
+      subApp.get('/', (req, res) => {
+        res.end()
+      })
+
+      app.use('/sub-app', subApp)
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should list routes correctly', () => {
+      expect(endpoints).to.have.length(2)
+      expect(endpoints[0].path).to.be.equal('/')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[1].path).to.be.equal('/sub-app')
+      // eslint-disable-next-line no-unused-expressions
+      expect(endpoints[1].methods).to.be.empty
+    })
+  })
 })
