@@ -488,7 +488,6 @@ describe('express-list-endpoints', () => {
     it('should retrieve the correct built path', () => {
       expect(endpoints).to.have.length(1)
       expect(endpoints[0].path).to.be.equal('/test')
-      expect(endpoints[0].methods[0]).to.be.equal('POST')
     })
 
     it('should retrieve the correct built methods', () => {
@@ -535,6 +534,7 @@ describe('express-list-endpoints', () => {
 
     before(() => {
       const app = express()
+      const router = express.Router()
 
       app.get([
         '/one',
@@ -543,11 +543,23 @@ describe('express-list-endpoints', () => {
         res.end()
       })
 
+      router.get([
+        '/one',
+        '/two'
+      ], (req, res) => {
+        res.end()
+      })
+
+      app.use([
+        '/router',
+        '/sub-path'
+      ], router)
+
       endpoints = listEndpoints(app)
     })
 
     it('should list routes correctly', () => {
-      expect(endpoints).to.have.length(2)
+      expect(endpoints).to.have.length(4)
       expect(endpoints[0].path).to.be.equal('/one')
       expect(endpoints[0].methods[0]).to.be.equal('GET')
       expect(endpoints[1].path).to.be.equal('/two')

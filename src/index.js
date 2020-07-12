@@ -1,5 +1,8 @@
 // var debug = require('debug')('express-list-endpoints')
 var regexpExpressRegexp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
+// var arrayPathItemRegexp = /\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?/
+// var arrayPathsRegexp = /\(\?:((\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?)+)\)\/i?/
+var expressRootRegexp = '/^\\/?(?=\\/|$)/i'
 var regexpExpressParam = /\(\?:\(\[\^\\\/]\+\?\)\)/g
 
 /**
@@ -43,7 +46,7 @@ var parseExpressRoute = function (route, basePath) {
   var endpoints = []
 
   if (Array.isArray(route.path)) {
-    route.path.forEach((path) => {
+    route.path.forEach(function (path) {
       var endpoint = {
         path: basePath + (basePath && path === '/' ? '' : path),
         methods: getRouteMethods(route),
@@ -105,6 +108,10 @@ var parseEndpoints = function (app, basePath, endpoints) {
         var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
 
         parseEndpoints(stackItem.handle, basePath + '/' + parsedPath, endpoints)
+      } else if (!stackItem.path && stackItem.regexp && stackItem.regexp.toString() !== expressRootRegexp) {
+        var regEcpPath = ' RegExp(' + stackItem.regexp + ') '
+
+        parseEndpoints(stackItem.handle, basePath + '/' + regEcpPath, endpoints)
       } else {
         parseEndpoints(stackItem.handle, basePath, endpoints)
       }
@@ -132,7 +139,11 @@ var addEndpoints = function (endpoints, newEndpoints) {
     if (foundEndpointIdx > -1) {
       var foundEndpoint = endpoints[foundEndpointIdx]
 
-      foundEndpoint.methods = foundEndpoint.methods.concat(newEndpoint.methods)
+      var newMethods = newEndpoint.methods.filter(function (method) {
+        return foundEndpoint.methods.indexOf(method) === -1
+      })
+
+      foundEndpoint.methods = foundEndpoint.methods.concat(newMethods)
     } else {
       endpoints.push(newEndpoint)
     }
