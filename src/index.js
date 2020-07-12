@@ -5,6 +5,12 @@ var regexpExpressRegexp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\
 var expressRootRegexp = '/^\\/?(?=\\/|$)/i'
 var regexpExpressParam = /\(\?:\(\[\^\\\/]\+\?\)\)/g
 
+var STACK_ITEM_VALID_NAMES = [
+  'router',
+  'bound dispatch',
+  'mounted_app'
+]
+
 /**
  * Returns all the verbs detected for the passed route
  */
@@ -98,25 +104,33 @@ var parseEndpoints = function (app, basePath, endpoints) {
   endpoints = endpoints || []
   basePath = basePath || ''
 
-  stack.forEach(function (stackItem) {
-    if (stackItem.route) {
-      var newEndpoints = parseExpressRoute(stackItem.route, basePath)
+  if (!stack) {
+    addEndpoints(endpoints, [{
+      path: basePath,
+      methods: [],
+      middlewares: []
+    }])
+  } else {
+    stack.forEach(function (stackItem) {
+      if (stackItem.route) {
+        var newEndpoints = parseExpressRoute(stackItem.route, basePath)
 
-      endpoints = addEndpoints(endpoints, newEndpoints)
-    } else if (stackItem.name === 'router' || stackItem.name === 'bound dispatch') {
-      if (regexpExpressRegexp.test(stackItem.regexp)) {
-        var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
+        endpoints = addEndpoints(endpoints, newEndpoints)
+      } else if (STACK_ITEM_VALID_NAMES.indexOf(stackItem.name) > -1) {
+        if (regexpExpressRegexp.test(stackItem.regexp)) {
+          var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
 
-        parseEndpoints(stackItem.handle, basePath + '/' + parsedPath, endpoints)
-      } else if (!stackItem.path && stackItem.regexp && stackItem.regexp.toString() !== expressRootRegexp) {
-        var regEcpPath = ' RegExp(' + stackItem.regexp + ') '
+          parseEndpoints(stackItem.handle, basePath + '/' + parsedPath, endpoints)
+        } else if (!stackItem.path && stackItem.regexp && stackItem.regexp.toString() !== expressRootRegexp) {
+          var regEcpPath = ' RegExp(' + stackItem.regexp + ') '
 
-        parseEndpoints(stackItem.handle, basePath + '/' + regEcpPath, endpoints)
-      } else {
-        parseEndpoints(stackItem.handle, basePath, endpoints)
+          parseEndpoints(stackItem.handle, basePath + '/' + regEcpPath, endpoints)
+        } else {
+          parseEndpoints(stackItem.handle, basePath, endpoints)
+        }
       }
-    }
-  })
+    })
+  }
 
   return endpoints
 }
