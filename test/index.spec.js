@@ -1,8 +1,8 @@
 /* eslint-env mocha */
-var chai = require('chai')
-var listEndpoints = require('../src/index')
-var express = require('express')
-var expect = chai.expect
+const chai = require('chai')
+const listEndpoints = require('../src/index')
+const express = require('express')
+const expect = chai.expect
 
 chai.should()
 
@@ -67,7 +67,7 @@ function checkResults (endpoints) {
 
 describe('express-list-endpoints', function () {
   describe('when called over an app', function () {
-    var app = express()
+    const app = express()
 
     app.route('/')
       .get(function (req, res) {
@@ -92,7 +92,7 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called over a router', function () {
-    var router = express.Router()
+    const router = express.Router()
 
     router.route('/')
       .get(function (req, res) {
@@ -117,8 +117,8 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called over an app with mounted routers', function () {
-    var app = express()
-    var router = express.Router()
+    const app = express()
+    const router = express.Router()
 
     app.route('/testing')
       .all(function (req, res) {
@@ -144,9 +144,8 @@ describe('express-list-endpoints', function () {
     checkResults(listEndpoints(app))
 
     describe('and some of the routers has the option `mergeParams`', function () {
-      var app = express()
-      var router = express.Router({ mergeParams: true })
-      var endpoints
+      const app = express()
+      const router = express.Router({ mergeParams: true })
 
       router.get('/:id/friends', function (req, res) {
         res.end()
@@ -154,18 +153,17 @@ describe('express-list-endpoints', function () {
 
       app.use('/router', router)
 
-      endpoints = listEndpoints(app)
+      const endpoints = listEndpoints(app)
 
-      it('should parse the endpoints corretly', function () {
+      it('should parse the endpoints correctly', function () {
         expect(endpoints).to.have.length(1)
         expect(endpoints[0].path).to.be.equal('/router/:id/friends')
       })
 
       describe('and also has a sub-router on the router', function () {
-        var app = express()
-        var router = express.Router({ mergeParams: true })
-        var subRouter = express.Router()
-        var endpoints
+        const app = express()
+        const router = express.Router({ mergeParams: true })
+        const subRouter = express.Router()
 
         subRouter.get('/', function (req, res) {
           res.end()
@@ -175,9 +173,9 @@ describe('express-list-endpoints', function () {
 
         router.use('/:postId/sub-router', subRouter)
 
-        endpoints = listEndpoints(app)
+        const endpoints = listEndpoints(app)
 
-        it('should parse the endpoints corretly', function () {
+        it('should parse the endpoints correctly', function () {
           expect(endpoints).to.have.length(1)
           expect(endpoints[0].path).to.be.equal('/router/:postId/sub-router')
         })
@@ -187,8 +185,7 @@ describe('express-list-endpoints', function () {
 
   describe('when the defined routes', function () {
     describe('contains underscores', function () {
-      var router = express.Router()
-      var endpoints
+      const router = express.Router()
 
       router.get('/some_route', function (req, res) {
         res.end()
@@ -202,7 +199,7 @@ describe('express-list-endpoints', function () {
         res.end()
       })
 
-      endpoints = listEndpoints(router)
+      const endpoints = listEndpoints(router)
 
       it('should parse the endpoint corretly', function () {
         endpoints[0].path.should.be.equal('/some_route')
@@ -212,8 +209,7 @@ describe('express-list-endpoints', function () {
     })
 
     describe('contains hyphens', function () {
-      var router = express.Router()
-      var endpoints
+      const router = express.Router()
 
       router.get('/some-route', function (req, res) {
         res.end()
@@ -227,9 +223,9 @@ describe('express-list-endpoints', function () {
         res.end()
       })
 
-      endpoints = listEndpoints(router)
+      const endpoints = listEndpoints(router)
 
-      it('should parse the endpoint corretly', function () {
+      it('should parse the endpoint correctly', function () {
         endpoints[0].path.should.be.equal('/some-route')
         endpoints[1].path.should.be.equal('/some-other-router')
         endpoints[2].path.should.be.equal('/--last-route--')
@@ -237,8 +233,7 @@ describe('express-list-endpoints', function () {
     })
 
     describe('contains dots', function () {
-      var router = express.Router()
-      var endpoints
+      const router = express.Router()
 
       router.get('/some.route', function (req, res) {
         res.end()
@@ -252,9 +247,9 @@ describe('express-list-endpoints', function () {
         res.end()
       })
 
-      endpoints = listEndpoints(router)
+      const endpoints = listEndpoints(router)
 
-      it('should parse the endpoint corretly', function () {
+      it('should parse the endpoint correctly', function () {
         endpoints[0].path.should.be.equal('/some.route')
         endpoints[1].path.should.be.equal('/some.other.router')
         endpoints[2].path.should.be.equal('/..last.route..')
@@ -262,8 +257,7 @@ describe('express-list-endpoints', function () {
     })
 
     describe('contains multiple different chars', function () {
-      var router = express.Router()
-      var endpoints
+      const router = express.Router()
 
       router.get('/s0m3_r.oute', function (req, res) {
         res.end()
@@ -277,9 +271,9 @@ describe('express-list-endpoints', function () {
         res.end()
       })
 
-      endpoints = listEndpoints(router)
+      const endpoints = listEndpoints(router)
 
-      it('should parse the endpoint corretly', function () {
+      it('should parse the endpoint correctly', function () {
         endpoints[0].path.should.be.equal('/s0m3_r.oute')
         endpoints[1].path.should.be.equal('/v1.0.0')
         endpoints[2].path.should.be.equal('/not_sure.what-1m.d01ng')
@@ -288,9 +282,8 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called over a mounted router with only root path', function () {
-    var endpoints
-    var app = express()
-    var router = express.Router()
+    const app = express()
+    const router = express.Router()
 
     router.get('/', function (req, res) {
       res.end()
@@ -298,7 +291,7 @@ describe('express-list-endpoints', function () {
 
     app.use('/', router)
 
-    endpoints = listEndpoints(app)
+    const endpoints = listEndpoints(app)
 
     it('should retrieve the list of endpoints and its methods', function () {
       expect(endpoints).to.have.length(1)
@@ -310,9 +303,8 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called over a multi-level base route', function () {
-    var endpoints
-    var app = express()
-    var router = express.Router()
+    const app = express()
+    const router = express.Router()
 
     router.get('/my/path', function (req, res) {
       res.end()
@@ -321,7 +313,7 @@ describe('express-list-endpoints', function () {
     app.use('/multi/level', router)
     app.use('/super/duper/multi/level', router)
 
-    endpoints = listEndpoints(app)
+    const endpoints = listEndpoints(app)
 
     it('should retrieve the correct built path', function () {
       expect(endpoints).to.have.length(2)
@@ -330,9 +322,8 @@ describe('express-list-endpoints', function () {
     })
 
     describe('with params', function () {
-      var endpoints
-      var app = express()
-      var router = express.Router()
+      const app = express()
+      const router = express.Router()
 
       router.get('/users/:id', function (req, res) {
         res.end()
@@ -344,7 +335,7 @@ describe('express-list-endpoints', function () {
 
       app.use('/multi/:multiId/level/:levelId', router)
 
-      endpoints = listEndpoints(app)
+      const endpoints = listEndpoints(app)
 
       it('should retrieve the correct built path', function () {
         expect(endpoints).to.have.length(2)
@@ -354,9 +345,8 @@ describe('express-list-endpoints', function () {
     })
 
     describe('with params in middle of the pattern', function () {
-      var endpoints
-      var app = express()
-      var router = express.Router()
+      const app = express()
+      const router = express.Router()
 
       router.get('/super/users/:id/friends', function (req, res) {
         res.end()
@@ -364,7 +354,7 @@ describe('express-list-endpoints', function () {
 
       app.use('/multi/level', router)
 
-      endpoints = listEndpoints(app)
+      const endpoints = listEndpoints(app)
 
       it('should retrieve the correct built path', function () {
         expect(endpoints).to.have.length(1)
@@ -374,14 +364,13 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called over a route with params', function () {
-    var endpoints
-    var app = express()
+    const app = express()
 
     app.get('/users/:id', function (req, res) {
       res.end()
     })
 
-    endpoints = listEndpoints(app)
+    const endpoints = listEndpoints(app)
 
     it('should retrieve the correct built path', function () {
       expect(endpoints).to.have.length(1)
@@ -390,14 +379,13 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called over a route with params in middle of the pattern', function () {
-    var endpoints
-    var app = express()
+    const app = express()
 
     app.get('/users/:id/friends', function (req, res) {
       res.end()
     })
 
-    endpoints = listEndpoints(app)
+    const endpoints = listEndpoints(app)
 
     it('should retrieve the correct built path', function () {
       expect(endpoints).to.have.length(1)
@@ -406,8 +394,7 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called over a route with multiple methods with "/" path defined', () => {
-    var endpoints
-    var router = express.Router()
+    const router = express.Router()
 
     router
       .post('/test', function (req, res) {
@@ -417,7 +404,7 @@ describe('express-list-endpoints', function () {
         res.end()
       })
 
-    endpoints = listEndpoints(router)
+    const endpoints = listEndpoints(router)
 
     it('should retrieve the correct built path', function () {
       expect(endpoints).to.have.length(1)
@@ -433,10 +420,9 @@ describe('express-list-endpoints', function () {
   })
 
   describe('when called with middlewares', () => {
-    var endpoints
-    var router = express.Router()
+    const router = express.Router()
 
-    var exampleMiddleware = function () {
+    const exampleMiddleware = function () {
       console.log('middleware')
     }
 
@@ -445,7 +431,7 @@ describe('express-list-endpoints', function () {
         res.end()
       })
 
-    endpoints = listEndpoints(router)
+    const endpoints = listEndpoints(router)
 
     it('should retrieve the correct built path', function () {
       expect(endpoints).to.have.length(1)
