@@ -1,6 +1,6 @@
 {
   "name": "express-list-endpoints",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "A express package to list all registered endoints and its verbs",
   "main": "src/index.js",
   "scripts": {
@@ -28,18 +28,18 @@
   "author": "Alberto Fernandez <albertofdzm@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=6"
+    "node": ">=10"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "changelog-version": "^1.0.1",
-    "eslint": "^5.7.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "express": "^4.16.4",
-    "mocha": "^6.0.0"
+    "eslint": "^7.4.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "express": "^4.17.1",
+    "mocha": "^8.0.1"
   }
 }
