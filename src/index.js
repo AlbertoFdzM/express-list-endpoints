@@ -79,8 +79,8 @@ const parseExpressRoute = function (route, basePath) {
  * @returns {string}
  */
 const parseExpressPath = function (expressPathRegExp, params) {
-  let expressPathRegExpExec = regExpToParseExpressPathRegExp.exec(expressPathRegExp)
   let parsedRegExp = expressPathRegExp.toString()
+  let expressPathRegExpExec = regExpToParseExpressPathRegExp.exec(parsedRegExp)
   let paramIndex = 0
 
   while (hasParams(parsedRegExp)) {
