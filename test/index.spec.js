@@ -11,15 +11,11 @@ chai.should()
 
 function checkResults (endpoints) {
   describe('should retrieve an array', () => {
-    // eslint-disable-next-line no-unused-expressions
-    endpoints.should.not.be.empty
     endpoints.should.be.an('array')
     endpoints.should.have.length(2)
 
     it('of objects', () => {
       endpoints.forEach((endpoint) => {
-        // eslint-disable-next-line no-unused-expressions
-        endpoint.should.not.be.empty
         endpoint.should.be.an('object')
       })
     })
@@ -29,8 +25,6 @@ function checkResults (endpoints) {
         describe('containing', () => {
           describe('the path', () => {
             it('as a string', () => {
-              // eslint-disable-next-line no-unused-expressions
-              endpoint.path.should.not.be.empty
               endpoint.path.should.be.a('string')
             })
 
@@ -41,15 +35,11 @@ function checkResults (endpoints) {
 
           describe('the methods', () => {
             it('as an array', () => {
-              // eslint-disable-next-line no-unused-expressions
-              endpoint.methods.should.not.be.empty
               endpoint.methods.should.be.an('array')
             })
 
             endpoint.methods.forEach((method) => {
               it('of strings', () => {
-                // eslint-disable-next-line no-unused-expressions
-                method.should.not.be.empty
                 method.should.be.a('string')
               })
 
@@ -59,6 +49,18 @@ function checkResults (endpoints) {
 
               it('excluding the _all ones', () => {
                 expect(method).to.not.be.equal('_ALL')
+              })
+            })
+          })
+
+          describe('the middlewares', () => {
+            it('as an array', () => {
+              endpoint.middlewares.should.be.an('array')
+            })
+
+            endpoint.middlewares.forEach((middleware) => {
+              it('of strings', () => {
+                middleware.should.be.a('string')
               })
             })
           })
@@ -503,14 +505,13 @@ describe('express-list-endpoints', () => {
     before(() => {
       const router = express.Router()
 
-      const exampleMiddleware = () => {
-        console.log('middleware')
-      }
+      const exampleMiddleware = () => {}
 
       router
-        .post('/test', exampleMiddleware, (req, res) => {
-          res.end()
-        })
+        .post('/test', [
+          exampleMiddleware,
+          () => {} // Anonymous middleware
+        ])
 
       endpoints = listEndpoints(router)
     })
@@ -521,11 +522,11 @@ describe('express-list-endpoints', () => {
       expect(endpoints[0].methods[0]).to.be.equal('POST')
     })
 
-    it('should retrieve the correct middleware', () => {
+    it('should retrieve the correct middlewares', () => {
       expect(endpoints).to.have.length(1)
-      expect(endpoints[0].middleware).to.have.length(2)
-      expect(endpoints[0].middleware[0]).to.equal('exampleMiddleware')
-      expect(endpoints[0].middleware[1]).to.equal('anonymous')
+      expect(endpoints[0].middlewares).to.have.length(2)
+      expect(endpoints[0].middlewares[0]).to.equal('exampleMiddleware')
+      expect(endpoints[0].middlewares[1]).to.equal('anonymous')
     })
   })
 
@@ -591,9 +592,10 @@ describe('express-list-endpoints', () => {
       expect(endpoints).to.have.length(2)
       expect(endpoints[0].path).to.be.equal('/')
       expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
       expect(endpoints[1].path).to.be.equal('/sub-app')
-      // eslint-disable-next-line no-unused-expressions
-      expect(endpoints[1].methods).to.be.empty
+      expect(endpoints[1].methods).to.have.length(0)
+      expect(endpoints[1].middlewares).to.have.length(0)
     })
   })
 })

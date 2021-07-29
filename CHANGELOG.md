@@ -17,10 +17,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [UNRELEASED]
 
+### Fixed
+- Fixed a problem when parsing the property `middlewares` for each endpoint being allocated in `middleware` property instead
+
 ### Dev
-- Added CI using [GitHub Actions](https://docs.github.com/en/actions).
-- Update dev dependencies.
-- Removed TravisCI from the project. 
+- Added CI using [GitHub Actions](https://docs.github.com/en/actions)
+- Update dev dependencies
+- Removed TravisCI from the project
+- Refactor code to use new JS methods and improve readability
 
 
 ## v5.0.0 - 2020-07-12
