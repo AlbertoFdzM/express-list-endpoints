@@ -31,7 +31,7 @@ const getRouteMethods = function (route) {
  * passed route
  */
 const getRouteMiddleware = function (route) {
-  return route.stack.map(function (item) {
+  return route.stack.map((item) => {
     return item.handle.name || 'anonymous'
   })
 }
@@ -52,7 +52,7 @@ const parseExpressRoute = function (route, basePath) {
   const endpoints = []
 
   if (Array.isArray(route.path)) {
-    route.path.forEach(function (path) {
+    route.path.forEach((path) => {
       const endpoint = {
         path: basePath + (basePath && path === '/' ? '' : path),
         methods: getRouteMethods(route),
@@ -111,7 +111,7 @@ const parseEndpoints = function (app, basePath, endpoints) {
       middlewares: []
     }])
   } else {
-    stack.forEach(function (stackItem) {
+    stack.forEach((stackItem) => {
       if (stackItem.route) {
         const newEndpoints = parseExpressRoute(stackItem.route, basePath)
 
@@ -145,15 +145,15 @@ const parseEndpoints = function (app, basePath, endpoints) {
  * @returns {Array} Updated endpoints array
  */
 const addEndpoints = function (endpoints, newEndpoints) {
-  newEndpoints.forEach(function (newEndpoint) {
-    const foundEndpointIdx = endpoints.findIndex(function (item) {
+  newEndpoints.forEach((newEndpoint) => {
+    const foundEndpointIdx = endpoints.findIndex((item) => {
       return item.path === newEndpoint.path
     })
 
     if (foundEndpointIdx > -1) {
       const foundEndpoint = endpoints[foundEndpointIdx]
 
-      const newMethods = newEndpoint.methods.filter(function (method) {
+      const newMethods = newEndpoint.methods.filter((method) => {
         return foundEndpoint.methods.indexOf(method) === -1
       })
 
