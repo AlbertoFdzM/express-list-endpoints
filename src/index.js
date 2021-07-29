@@ -22,10 +22,12 @@ const getRouteMethods = function (route) {
 }
 
 /**
- * Returns the names (or anonymous) of all the middleware attached to the
+ * Returns the names (or anonymous) of all the middlewares attached to the
  * passed route
+ * @param {Object} route
+ * @returns {string[]}
  */
-const getRouteMiddleware = function (route) {
+const getRouteMiddlewares = function (route) {
   return route.stack.map((item) => {
     return item.handle.name || 'anonymous'
   })
@@ -62,7 +64,7 @@ const parseExpressRoute = function (route, basePath) {
     const endpoint = {
       path: completePath,
       methods: getRouteMethods(route),
-      middleware: getRouteMiddleware(route)
+      middlewares: getRouteMiddlewares(route)
     }
 
     return endpoint

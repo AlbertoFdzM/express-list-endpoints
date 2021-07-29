@@ -14,7 +14,7 @@ const listEndpoints = require('express-list-endpoints')
 let app = require('express')();
 
 app.route('/')
-  .all(function(req, res) {
+  .all(function namedMiddleware(req, res) {
     // Handle request
   })
   .get(function(req, res) {
@@ -30,14 +30,17 @@ app.route('/about')
   });
 
 console.log(listEndpoints(app));
+
 /* It omits the 'all' verbs.
 [{
     path: '/',
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST'],
+    middlewares: ['namedMiddleware', 'anonymous', 'anonymous']
   },
   {
     path: '/about',
-    methods: ['GET']
+    methods: ['GET'],
+    middlewares: ['anonymous']
 }]
 */
 ```
