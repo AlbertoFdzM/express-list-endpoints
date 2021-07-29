@@ -1,11 +1,9 @@
-// var debug = require('debug')('express-list-endpoints')
-var regexpExpressRegexp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
-// var arrayPathItemRegexp = /\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?/
-// var arrayPathsRegexp = /\(\?:((\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?)+)\)\/i?/
-var expressRootRegexp = '/^\\/?(?=\\/|$)/i'
-var regexpExpressParam = /\(\?:\(\[\^\\\/]\+\?\)\)/g
+const regExpToParseExpressPathRegExp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
+const regExpToReplaceExpressPathRegExpParams = /\(\?:\(\[\^\\\/]\+\?\)\)/
+const regexpExpressParamRegexp = /\(\?:\(\[\^\\\/]\+\?\)\)/g
 
-var STACK_ITEM_VALID_NAMES = [
+const EXPRESS_ROOT_PATH_REGEXP_VALUE = '/^\\/?(?=\\/|$)/i'
+const STACK_ITEM_VALID_NAMES = [
   'router',
   'bound dispatch',
   'mounted_app'
@@ -14,33 +12,34 @@ var STACK_ITEM_VALID_NAMES = [
 /**
  * Returns all the verbs detected for the passed route
  */
-var getRouteMethods = function (route) {
-  var methods = []
+const getRouteMethods = function (route) {
+  let methods = Object.keys(route.methods)
 
-  for (var method in route.methods) {
-    if (method === '_all') continue
-
-    methods.push(method.toUpperCase())
-  }
+  methods = methods.filter((method) => method !== '_all')
+  methods = methods.map((method) => method.toUpperCase())
 
   return methods
 }
 
 /**
- * Returns the names (or anonymous) of all the middleware attached to the
+ * Returns the names (or anonymous) of all the middlewares attached to the
  * passed route
+ * @param {Object} route
+ * @returns {string[]}
  */
-var getRouteMiddleware = function (route) {
-  return route.stack.map(function (item) {
+const getRouteMiddlewares = function (route) {
+  return route.stack.map((item) => {
     return item.handle.name || 'anonymous'
   })
 }
 
 /**
  * Returns true if found regexp related with express params
+ * @param {string} expressPathRegExp
+ * @returns {boolean}
  */
-var hasParams = function (pathRegexp) {
-  return regexpExpressParam.test(pathRegexp)
+const hasParams = function (expressPathRegExp) {
+  return regexpExpressParamRegexp.test(expressPathRegExp)
 }
 
 /**
@@ -48,88 +47,81 @@ var hasParams = function (pathRegexp) {
  * @param {string} basePath The basePath the route is on
  * @return {Object[]} Endpoints info
  */
-var parseExpressRoute = function (route, basePath) {
-  var endpoints = []
+const parseExpressRoute = function (route, basePath) {
+  const paths = []
 
   if (Array.isArray(route.path)) {
-    route.path.forEach(function (path) {
-      var endpoint = {
-        path: basePath + (basePath && path === '/' ? '' : path),
-        methods: getRouteMethods(route),
-        middleware: getRouteMiddleware(route)
-      }
-
-      endpoints.push(endpoint)
-    })
+    paths.push(...route.path)
   } else {
-    var endpoint = {
-      path: basePath + (basePath && route.path === '/' ? '' : route.path),
+    paths.push(route.path)
+  }
+
+  const endpoints = paths.map((path) => {
+    const completePath = basePath && path === '/'
+      ? basePath
+      : `${basePath}${path}`
+
+    const endpoint = {
+      path: completePath,
       methods: getRouteMethods(route),
-      middleware: getRouteMiddleware(route)
+      middlewares: getRouteMiddlewares(route)
     }
 
-    endpoints.push(endpoint)
-  }
+    return endpoint
+  })
 
   return endpoints
 }
 
-var parseExpressPath = function (expressPathRegexp, params) {
-  var parsedPath = regexpExpressRegexp.exec(expressPathRegexp)
-  var parsedRegexp = expressPathRegexp
-  var paramIdx = 0
+/**
+ * @param {RegExp} expressPathRegExp
+ * @param {Object[]} params
+ * @returns {string}
+ */
+const parseExpressPath = function (expressPathRegExp, params) {
+  let expressPathRegExpExec = regExpToParseExpressPathRegExp.exec(expressPathRegExp)
+  let parsedRegExp = expressPathRegExp.toString()
+  let paramIndex = 0
 
-  while (hasParams(parsedRegexp)) {
-    var paramId = ':' + params[paramIdx].name
+  while (hasParams(parsedRegExp)) {
+    const paramName = params[paramIndex].name
+    const paramId = `:${paramName}`
 
-    parsedRegexp = parsedRegexp
-      .toString()
-      .replace(/\(\?:\(\[\^\\\/]\+\?\)\)/, paramId)
+    parsedRegExp = parsedRegExp
+      .replace(regExpToReplaceExpressPathRegExpParams, paramId)
 
-    paramIdx++
+    paramIndex++
   }
 
-  if (parsedRegexp !== expressPathRegexp) {
-    parsedPath = regexpExpressRegexp.exec(parsedRegexp)
+  if (parsedRegExp !== expressPathRegExp.toString()) {
+    expressPathRegExpExec = regExpToParseExpressPathRegExp.exec(parsedRegExp)
   }
 
-  parsedPath = parsedPath[1].replace(/\\\//g, '/')
+  const parsedPath = expressPathRegExpExec[1].replace(/\\\//g, '/')
 
   return parsedPath
 }
 
-var parseEndpoints = function (app, basePath, endpoints) {
-  var stack = app.stack || (app._router && app._router.stack)
+/**
+ * @param {Object} app
+ * @param {string} [basePath]
+ * @param {Object[]} [endpoints]
+ * @returns {Object[]}
+ */
+const parseEndpoints = function (app, basePath, endpoints) {
+  const stack = app.stack || (app._router && app._router.stack)
 
   endpoints = endpoints || []
   basePath = basePath || ''
 
   if (!stack) {
-    addEndpoints(endpoints, [{
+    endpoints = addEndpoints(endpoints, [{
       path: basePath,
       methods: [],
       middlewares: []
     }])
   } else {
-    stack.forEach(function (stackItem) {
-      if (stackItem.route) {
-        var newEndpoints = parseExpressRoute(stackItem.route, basePath)
-
-        endpoints = addEndpoints(endpoints, newEndpoints)
-      } else if (STACK_ITEM_VALID_NAMES.indexOf(stackItem.name) > -1) {
-        if (regexpExpressRegexp.test(stackItem.regexp)) {
-          var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
-
-          parseEndpoints(stackItem.handle, basePath + '/' + parsedPath, endpoints)
-        } else if (!stackItem.path && stackItem.regexp && stackItem.regexp.toString() !== expressRootRegexp) {
-          var regEcpPath = ' RegExp(' + stackItem.regexp + ') '
-
-          parseEndpoints(stackItem.handle, basePath + '/' + regEcpPath, endpoints)
-        } else {
-          parseEndpoints(stackItem.handle, basePath, endpoints)
-        }
-      }
-    })
+    endpoints = parseStack(stack, basePath, endpoints)
   }
 
   return endpoints
@@ -140,26 +132,58 @@ var parseEndpoints = function (app, basePath, endpoints) {
  * If the path is already in the array merges the endpoints with the existing
  * one, if not, it adds them to the array.
  *
- * @param {Array} endpoints Array of current endpoints
- * @param {Object[]} newEndpoints New endpoints to be added to the array
- * @returns {Array} Updated endpoints array
+ * @param {Object[]} currentEndpoints Array of current endpoints
+ * @param {Object[]} endpointsToAdd New endpoints to be added to the array
+ * @returns {Object[]} Updated endpoints array
  */
-var addEndpoints = function (endpoints, newEndpoints) {
-  newEndpoints.forEach(function (newEndpoint) {
-    var foundEndpointIdx = endpoints.findIndex(function (item) {
-      return item.path === newEndpoint.path
-    })
+const addEndpoints = function (currentEndpoints, endpointsToAdd) {
+  endpointsToAdd.forEach((newEndpoint) => {
+    const existingEndpoint = currentEndpoints.find(
+      (item) => item.path === newEndpoint.path
+    )
 
-    if (foundEndpointIdx > -1) {
-      var foundEndpoint = endpoints[foundEndpointIdx]
+    if (existingEndpoint !== undefined) {
+      const newMethods = newEndpoint.methods.filter(
+        (method) => !existingEndpoint.methods.includes(method)
+      )
 
-      var newMethods = newEndpoint.methods.filter(function (method) {
-        return foundEndpoint.methods.indexOf(method) === -1
-      })
-
-      foundEndpoint.methods = foundEndpoint.methods.concat(newMethods)
+      existingEndpoint.methods = existingEndpoint.methods.concat(newMethods)
     } else {
-      endpoints.push(newEndpoint)
+      currentEndpoints.push(newEndpoint)
+    }
+  })
+
+  return currentEndpoints
+}
+
+/**
+ * @param {Object} stack
+ * @param {string} basePath
+ * @param {Object[]} endpoints
+ * @returns {Object[]}
+ */
+const parseStack = function (stack, basePath, endpoints) {
+  stack.forEach((stackItem) => {
+    if (stackItem.route) {
+      const newEndpoints = parseExpressRoute(stackItem.route, basePath)
+
+      endpoints = addEndpoints(endpoints, newEndpoints)
+    } else if (STACK_ITEM_VALID_NAMES.includes(stackItem.name)) {
+      const isExpressPathRegexp = regExpToParseExpressPathRegExp.test(stackItem.regexp)
+
+      let newBasePath = basePath
+
+      if (isExpressPathRegexp) {
+        const parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
+
+        newBasePath += `/${parsedPath}`
+      } else if (!stackItem.path && stackItem.regexp && stackItem.regexp.toString() !== EXPRESS_ROOT_PATH_REGEXP_VALUE) {
+        const regExpPath = ` RegExp(${stackItem.regexp}) `
+
+        newBasePath += `/${regExpPath}`
+      }
+
+      endpoints = parseEndpoints(stackItem.handle, newBasePath, endpoints)
     }
   })
 
@@ -170,8 +194,8 @@ var addEndpoints = function (endpoints, newEndpoints) {
  * Returns an array of strings with all the detected endpoints
  * @param {Object} app the express/route instance to get the endpoints from
  */
-var getEndpoints = function (app) {
-  var endpoints = parseEndpoints(app)
+const getEndpoints = function (app) {
+  const endpoints = parseEndpoints(app)
 
   return endpoints
 }
