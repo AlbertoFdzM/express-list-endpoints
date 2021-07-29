@@ -208,7 +208,6 @@ describe('express-list-endpoints', () => {
           app.use('/router', router)
 
           router.use('/:postId/sub-router', subRouter)
-          router.use('/:postId([0-9]+)/sub-router2', subRouter)
 
           endpoints = listEndpoints(app)
         })
@@ -216,7 +215,6 @@ describe('express-list-endpoints', () => {
         it('should parse the endpoints correctly', () => {
           expect(endpoints).to.have.length(1)
           expect(endpoints[0].path).to.be.equal('/router/:postId/sub-router')
-          expect(endpoints[1].path).to.be.equal('/router/:postId/sub-router2')
         })
       })
     })
@@ -408,6 +406,30 @@ describe('express-list-endpoints', () => {
         expect(endpoints).to.have.length(2)
         expect(endpoints[0].path).to.be.equal('/multi/:multiId/level/:levelId/users/:id')
         expect(endpoints[1].path).to.be.equal('/multi/:multiId/level/:levelId/super/users/:id')
+      })
+    })
+
+    describe.only('with params using RegExp validation', () => {
+      let endpoints
+
+      before(() => {
+        const app = express()
+        const router = express.Router()
+
+        router.get('/users/:id([a-zA-Z0-9]+\\d{1,9})', (req, res) => {
+          res.end()
+        })
+
+        app.use(router)
+        app.use('/companies/:companyUuid([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})', router)
+
+        endpoints = listEndpoints(app)
+      })
+
+      it('should retrieve the correct built path', () => {
+        expect(endpoints).to.have.length(2)
+        expect(endpoints[0].path).to.be.equal('/users/:id([a-zA-Z0-9]+\\d{1,9})')
+        expect(endpoints[1].path).to.be.equal('/companies/:companyUuid([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/users/:id([a-zA-Z0-9]+\\d{1,9})')
       })
     })
 
