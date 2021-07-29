@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [UNRELEASED]
 
+### Deprecated
+- **BREAKING CHANGE** Drop support for NodeJS v10
+
 ### Fixed
 - Fixed a problem when parsing the property `middlewares` for each endpoint being allocated in `middleware` property instead
 
