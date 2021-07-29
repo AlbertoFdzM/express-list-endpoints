@@ -93,7 +93,7 @@ const parseExpressPath = function (expressPathRegExp, params) {
     paramIndex++
   }
 
-  if (parsedRegExp !== expressPathRegExp) {
+  if (parsedRegExp !== expressPathRegExp.toString()) {
     expressPathRegExpExec = regExpToParseExpressPathRegExp.exec(parsedRegExp)
   }
 
