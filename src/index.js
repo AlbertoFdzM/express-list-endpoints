@@ -1,11 +1,11 @@
 // var debug = require('debug')('express-list-endpoints')
-var regexpExpressRegexp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
+const regexpExpressRegexp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
 // var arrayPathItemRegexp = /\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?/
 // var arrayPathsRegexp = /\(\?:((\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?)+)\)\/i?/
-var expressRootRegexp = '/^\\/?(?=\\/|$)/i'
-var regexpExpressParam = /\(\?:\(\[\^\\\/]\+\?\)\)/g
+const expressRootRegexp = '/^\\/?(?=\\/|$)/i'
+const regexpExpressParam = /\(\?:\(\[\^\\\/]\+\?\)\)/g
 
-var STACK_ITEM_VALID_NAMES = [
+const STACK_ITEM_VALID_NAMES = [
   'router',
   'bound dispatch',
   'mounted_app'
@@ -14,10 +14,10 @@ var STACK_ITEM_VALID_NAMES = [
 /**
  * Returns all the verbs detected for the passed route
  */
-var getRouteMethods = function (route) {
-  var methods = []
+const getRouteMethods = function (route) {
+  const methods = []
 
-  for (var method in route.methods) {
+  for (const method in route.methods) {
     if (method === '_all') continue
 
     methods.push(method.toUpperCase())
@@ -30,7 +30,7 @@ var getRouteMethods = function (route) {
  * Returns the names (or anonymous) of all the middleware attached to the
  * passed route
  */
-var getRouteMiddleware = function (route) {
+const getRouteMiddleware = function (route) {
   return route.stack.map(function (item) {
     return item.handle.name || 'anonymous'
   })
@@ -39,7 +39,7 @@ var getRouteMiddleware = function (route) {
 /**
  * Returns true if found regexp related with express params
  */
-var hasParams = function (pathRegexp) {
+const hasParams = function (pathRegexp) {
   return regexpExpressParam.test(pathRegexp)
 }
 
@@ -48,12 +48,12 @@ var hasParams = function (pathRegexp) {
  * @param {string} basePath The basePath the route is on
  * @return {Object[]} Endpoints info
  */
-var parseExpressRoute = function (route, basePath) {
-  var endpoints = []
+const parseExpressRoute = function (route, basePath) {
+  const endpoints = []
 
   if (Array.isArray(route.path)) {
     route.path.forEach(function (path) {
-      var endpoint = {
+      const endpoint = {
         path: basePath + (basePath && path === '/' ? '' : path),
         methods: getRouteMethods(route),
         middleware: getRouteMiddleware(route)
@@ -62,7 +62,7 @@ var parseExpressRoute = function (route, basePath) {
       endpoints.push(endpoint)
     })
   } else {
-    var endpoint = {
+    const endpoint = {
       path: basePath + (basePath && route.path === '/' ? '' : route.path),
       methods: getRouteMethods(route),
       middleware: getRouteMiddleware(route)
@@ -74,13 +74,13 @@ var parseExpressRoute = function (route, basePath) {
   return endpoints
 }
 
-var parseExpressPath = function (expressPathRegexp, params) {
-  var parsedPath = regexpExpressRegexp.exec(expressPathRegexp)
-  var parsedRegexp = expressPathRegexp
-  var paramIdx = 0
+const parseExpressPath = function (expressPathRegexp, params) {
+  let parsedPath = regexpExpressRegexp.exec(expressPathRegexp)
+  let parsedRegexp = expressPathRegexp
+  let paramIdx = 0
 
   while (hasParams(parsedRegexp)) {
-    var paramId = ':' + params[paramIdx].name
+    const paramId = ':' + params[paramIdx].name
 
     parsedRegexp = parsedRegexp
       .toString()
@@ -98,8 +98,8 @@ var parseExpressPath = function (expressPathRegexp, params) {
   return parsedPath
 }
 
-var parseEndpoints = function (app, basePath, endpoints) {
-  var stack = app.stack || (app._router && app._router.stack)
+const parseEndpoints = function (app, basePath, endpoints) {
+  const stack = app.stack || (app._router && app._router.stack)
 
   endpoints = endpoints || []
   basePath = basePath || ''
@@ -113,16 +113,16 @@ var parseEndpoints = function (app, basePath, endpoints) {
   } else {
     stack.forEach(function (stackItem) {
       if (stackItem.route) {
-        var newEndpoints = parseExpressRoute(stackItem.route, basePath)
+        const newEndpoints = parseExpressRoute(stackItem.route, basePath)
 
         endpoints = addEndpoints(endpoints, newEndpoints)
       } else if (STACK_ITEM_VALID_NAMES.indexOf(stackItem.name) > -1) {
         if (regexpExpressRegexp.test(stackItem.regexp)) {
-          var parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
+          const parsedPath = parseExpressPath(stackItem.regexp, stackItem.keys)
 
           parseEndpoints(stackItem.handle, basePath + '/' + parsedPath, endpoints)
         } else if (!stackItem.path && stackItem.regexp && stackItem.regexp.toString() !== expressRootRegexp) {
-          var regEcpPath = ' RegExp(' + stackItem.regexp + ') '
+          const regEcpPath = ' RegExp(' + stackItem.regexp + ') '
 
           parseEndpoints(stackItem.handle, basePath + '/' + regEcpPath, endpoints)
         } else {
@@ -144,16 +144,16 @@ var parseEndpoints = function (app, basePath, endpoints) {
  * @param {Object[]} newEndpoints New endpoints to be added to the array
  * @returns {Array} Updated endpoints array
  */
-var addEndpoints = function (endpoints, newEndpoints) {
+const addEndpoints = function (endpoints, newEndpoints) {
   newEndpoints.forEach(function (newEndpoint) {
-    var foundEndpointIdx = endpoints.findIndex(function (item) {
+    const foundEndpointIdx = endpoints.findIndex(function (item) {
       return item.path === newEndpoint.path
     })
 
     if (foundEndpointIdx > -1) {
-      var foundEndpoint = endpoints[foundEndpointIdx]
+      const foundEndpoint = endpoints[foundEndpointIdx]
 
-      var newMethods = newEndpoint.methods.filter(function (method) {
+      const newMethods = newEndpoint.methods.filter(function (method) {
         return foundEndpoint.methods.indexOf(method) === -1
       })
 
@@ -170,8 +170,8 @@ var addEndpoints = function (endpoints, newEndpoints) {
  * Returns an array of strings with all the detected endpoints
  * @param {Object} app the express/route instance to get the endpoints from
  */
-var getEndpoints = function (app) {
-  var endpoints = parseEndpoints(app)
+const getEndpoints = function (app) {
+  const endpoints = parseEndpoints(app)
 
   return endpoints
 }
