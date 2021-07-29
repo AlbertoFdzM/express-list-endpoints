@@ -16,6 +16,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
@@ -31,5 +34,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov
+    - run: npm i -g nyc
     - run: npm ci
-    - run: npm test
+    - run: npm run lint && nyc --reporter=json npm test
+    - run: ./codecov -t ${CODECOV_TOKEN}
