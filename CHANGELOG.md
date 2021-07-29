@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -->
 
 
+## [UNRELEASED]
+
+### Dev
+- Added CI using [GitHub Actions](https://docs.github.com/en/actions).
+
+
 ## v5.0.0 - 2020-07-12
 
 ### Added
