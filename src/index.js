@@ -1,7 +1,4 @@
-// var debug = require('debug')('express-list-endpoints')
 const regexpExpressRegexp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
-// var arrayPathItemRegexp = /\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?/
-// var arrayPathsRegexp = /\(\?:((\^[^^$]*\\\/\?\(\?=\\\/\|\$\)\|?)+)\)\/i?/
 const expressRootRegexp = '/^\\/?(?=\\/|$)/i'
 const regexpExpressParam = /\(\?:\(\[\^\\\/]\+\?\)\)/g
 
