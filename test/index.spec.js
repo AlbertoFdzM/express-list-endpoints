@@ -409,7 +409,7 @@ describe('express-list-endpoints', () => {
       })
     })
 
-    describe.only('with params using RegExp validation', () => {
+    describe('with params using RegExp validation', () => {
       let endpoints
 
       before(() => {
