@@ -34,12 +34,17 @@ console.log(listEndpoints(app));
 /* It omits the 'all' verbs.
 [{
     path: '/',
-    methods: ['GET', 'POST'],
+    method: 'GET',
     middlewares: ['namedMiddleware', 'anonymous', 'anonymous']
   },
   {
+    path: '/',
+    method: 'POST',
+    middlewares: ['namedMiddleware', 'anonymous', 'anonymous']
+  }
+  {
     path: '/about',
-    methods: ['GET'],
+    method: 'GET',
     middlewares: ['anonymous']
 }]
 */

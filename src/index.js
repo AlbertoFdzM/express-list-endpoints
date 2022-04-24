@@ -56,18 +56,19 @@ const parseExpressRoute = function (route, basePath) {
     paths.push(route.path)
   }
 
-  const endpoints = paths.map((path) => {
+  const endpoints = []
+  paths.forEach((path) => {
     const completePath = basePath && path === '/'
       ? basePath
       : `${basePath}${path}`
 
-    const endpoint = {
-      path: completePath,
-      methods: getRouteMethods(route),
-      middlewares: getRouteMiddlewares(route)
-    }
-
-    return endpoint
+    getRouteMethods(route).forEach((method) => {
+      endpoints.push({
+        method,
+        path: completePath,
+        middlewares: getRouteMiddlewares(route)
+      })
+    })
   })
 
   return endpoints
@@ -117,7 +118,7 @@ const parseEndpoints = function (app, basePath, endpoints) {
   if (!stack) {
     endpoints = addEndpoints(endpoints, [{
       path: basePath,
-      methods: [],
+      method: null,
       middlewares: []
     }])
   } else {
@@ -139,15 +140,11 @@ const parseEndpoints = function (app, basePath, endpoints) {
 const addEndpoints = function (currentEndpoints, endpointsToAdd) {
   endpointsToAdd.forEach((newEndpoint) => {
     const existingEndpoint = currentEndpoints.find(
-      (item) => item.path === newEndpoint.path
+      (item) => item.path === newEndpoint.path && item.method === newEndpoint.method
     )
 
     if (existingEndpoint !== undefined) {
-      const newMethods = newEndpoint.methods.filter(
-        (method) => !existingEndpoint.methods.includes(method)
-      )
-
-      existingEndpoint.methods = existingEndpoint.methods.concat(newMethods)
+      existingEndpoint.middlewares = existingEndpoint.middlewares.concat(newEndpoint.middlewares)
     } else {
       currentEndpoints.push(newEndpoint)
     }

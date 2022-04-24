@@ -12,7 +12,7 @@ chai.should()
 function checkResults (endpoints) {
   describe('should retrieve an array', () => {
     endpoints.should.be.an('array')
-    endpoints.should.have.length(2)
+    endpoints.should.have.length(3)
 
     it('of objects', () => {
       endpoints.forEach((endpoint) => {
@@ -33,23 +33,19 @@ function checkResults (endpoints) {
             })
           })
 
-          describe('the methods', () => {
-            it('as an array', () => {
-              endpoint.methods.should.be.an('array')
+          describe('the method', () => {
+            const {method} = endpoint
+
+            it('is a string', () => {
+              method.should.be.a('string')
             })
 
-            endpoint.methods.forEach((method) => {
-              it('of strings', () => {
-                method.should.be.a('string')
-              })
+            it('in uppercase', () => {
+              expect(method).to.be.equal(method.toUpperCase())
+            })
 
-              it('in uppercase', () => {
-                expect(method).to.be.equal(method.toUpperCase())
-              })
-
-              it('excluding the _all ones', () => {
-                expect(method).to.not.be.equal('_ALL')
-              })
+            it('excluding the _all ones', () => {
+              expect(method).to.not.be.equal('_ALL')
             })
           })
 
@@ -353,9 +349,9 @@ describe('express-list-endpoints', () => {
     it('should retrieve the list of endpoints and its methods', () => {
       expect(endpoints).to.have.length(1)
       expect(endpoints[0]).to.have.own.property('path')
-      expect(endpoints[0]).to.have.own.property('methods')
+      expect(endpoints[0]).to.have.own.property('method')
       expect(endpoints[0].path).to.be.equal('/')
-      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].method).to.be.equal('GET')
     })
   })
 
@@ -488,14 +484,14 @@ describe('express-list-endpoints', () => {
     })
 
     it('should retrieve the correct built path', () => {
-      expect(endpoints).to.have.length(1)
+      expect(endpoints).to.have.length(2)
       expect(endpoints[0].path).to.be.equal('/test')
+      expect(endpoints[1].path).to.be.equal('/test')
     })
 
     it('should retrieve the correct built methods', () => {
-      expect(endpoints[0].methods).to.have.length(2)
-      expect(endpoints[0].methods[0]).to.be.equal('POST')
-      expect(endpoints[0].methods[1]).to.be.equal('DELETE')
+      expect(endpoints[0].method).to.be.equal('POST')
+      expect(endpoints[1].method).to.be.equal('DELETE')
     })
   })
 
@@ -519,7 +515,7 @@ describe('express-list-endpoints', () => {
     it('should retrieve the correct built path', () => {
       expect(endpoints).to.have.length(1)
       expect(endpoints[0].path).to.be.equal('/test')
-      expect(endpoints[0].methods[0]).to.be.equal('POST')
+      expect(endpoints[0].method).to.be.equal('POST')
     })
 
     it('should retrieve the correct middlewares', () => {
@@ -562,9 +558,9 @@ describe('express-list-endpoints', () => {
     it('should list routes correctly', () => {
       expect(endpoints).to.have.length(4)
       expect(endpoints[0].path).to.be.equal('/one')
-      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].method).to.be.equal('GET')
       expect(endpoints[1].path).to.be.equal('/two')
-      expect(endpoints[1].methods[0]).to.be.equal('GET')
+      expect(endpoints[1].method).to.be.equal('GET')
     })
   })
 
@@ -591,10 +587,10 @@ describe('express-list-endpoints', () => {
     it('should list routes correctly', () => {
       expect(endpoints).to.have.length(2)
       expect(endpoints[0].path).to.be.equal('/')
-      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].method).to.be.equal('GET')
       expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
       expect(endpoints[1].path).to.be.equal('/sub-app')
-      expect(endpoints[1].methods).to.have.length(0)
+      expect(endpoints[1].method).to.be.null
       expect(endpoints[1].middlewares).to.have.length(0)
     })
   })
