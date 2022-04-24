@@ -509,20 +509,29 @@ describe('express-list-endpoints', () => {
           () => {} // Anonymous middleware
         ])
 
+      router
+        .get('/test', [
+          () => {} // Anonymous middleware
+        ])
+
       endpoints = listEndpoints(router)
     })
 
     it('should retrieve the correct built path', () => {
-      expect(endpoints).to.have.length(1)
+      expect(endpoints).to.have.length(2)
       expect(endpoints[0].path).to.be.equal('/test')
       expect(endpoints[0].method).to.be.equal('POST')
+      expect(endpoints[1].path).to.be.equal('/test')
+      expect(endpoints[1].method).to.be.equal('GET')
     })
 
     it('should retrieve the correct middlewares', () => {
-      expect(endpoints).to.have.length(1)
+      expect(endpoints).to.have.length(2)
       expect(endpoints[0].middlewares).to.have.length(2)
       expect(endpoints[0].middlewares[0]).to.equal('exampleMiddleware')
       expect(endpoints[0].middlewares[1]).to.equal('anonymous')
+      expect(endpoints[1].middlewares).to.have.length(1)
+      expect(endpoints[1].middlewares[0]).to.equal('anonymous')
     })
   })
 
