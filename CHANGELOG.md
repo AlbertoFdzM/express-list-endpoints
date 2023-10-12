@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 -->
 
+## [UNRELEASED]
+
+###
+- Add support for NodeJS v18, v20 and v22.
+
+### Deprecated
+- **BREAKING CHANGE** Drop support for NodeJS v12, v14 and v16.
+
 
 ## v6.0.0 - 2021-07-29
 

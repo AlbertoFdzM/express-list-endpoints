@@ -28,7 +28,7 @@
   "author": "Alberto Fernandez <albertofdzm@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=10"
+    "node": ">=18"
   },
   "devDependencies": {
     "chai": "^4.3.4",
