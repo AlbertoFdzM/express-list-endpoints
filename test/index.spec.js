@@ -409,6 +409,30 @@ describe('express-list-endpoints', () => {
       })
     })
 
+    describe('with params using RegExp validation', () => {
+      let endpoints
+
+      before(() => {
+        const app = express()
+        const router = express.Router()
+
+        router.get('/users/:id([a-zA-Z0-9]+\\d{1,9})', (req, res) => {
+          res.end()
+        })
+
+        app.use(router)
+        app.use('/companies/:companyUuid([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})', router)
+
+        endpoints = listEndpoints(app)
+      })
+
+      it('should retrieve the correct built path', () => {
+        expect(endpoints).to.have.length(2)
+        expect(endpoints[0].path).to.be.equal('/users/:id([a-zA-Z0-9]+\\d{1,9})')
+        expect(endpoints[1].path).to.be.equal('/companies/:companyUuid([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/users/:id([a-zA-Z0-9]+\\d{1,9})')
+      })
+    })
+
     describe('with params in middle of the pattern', () => {
       let endpoints
 
