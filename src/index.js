@@ -8,6 +8,10 @@ const STACK_ITEM_VALID_NAMES = [
   'bound dispatch',
   'mounted_app'
 ]
+const STACK_ITEM_VALID_NAMES_INCLUDING_MIDDLEWARE_ROUTES = [
+  '<anonymous>',
+  ...STACK_ITEM_VALID_NAMES
+];
 
 /**
  * Returns all the verbs detected for the passed route
@@ -108,7 +112,7 @@ const parseExpressPath = function (expressPathRegExp, params) {
  * @param {Object[]} [endpoints]
  * @returns {Object[]}
  */
-const parseEndpoints = function (app, basePath, endpoints) {
+const parseEndpoints = function (app, basePath, endpoints, options) {
   const stack = app.stack || (app._router && app._router.stack)
 
   endpoints = endpoints || []
@@ -121,7 +125,7 @@ const parseEndpoints = function (app, basePath, endpoints) {
       middlewares: []
     }])
   } else {
-    endpoints = parseStack(stack, basePath, endpoints)
+    endpoints = parseStack(stack, basePath, endpoints, options)
   }
 
   return endpoints
@@ -162,13 +166,14 @@ const addEndpoints = function (currentEndpoints, endpointsToAdd) {
  * @param {Object[]} endpoints
  * @returns {Object[]}
  */
-const parseStack = function (stack, basePath, endpoints) {
+const parseStack = function (stack, basePath, endpoints, options = {}) {
+  const VALID_NAMES = options.includeMiddlewareRoutes ? STACK_ITEM_VALID_NAMES_INCLUDING_MIDDLEWARE_ROUTES : STACK_ITEM_VALID_NAMES;
   stack.forEach((stackItem) => {
     if (stackItem.route) {
       const newEndpoints = parseExpressRoute(stackItem.route, basePath)
 
       endpoints = addEndpoints(endpoints, newEndpoints)
-    } else if (STACK_ITEM_VALID_NAMES.includes(stackItem.name)) {
+    } else if (VALID_NAMES.includes(stackItem.name)) {
       const isExpressPathRegexp = regExpToParseExpressPathRegExp.test(stackItem.regexp)
 
       let newBasePath = basePath
@@ -183,7 +188,7 @@ const parseStack = function (stack, basePath, endpoints) {
         newBasePath += `/${regExpPath}`
       }
 
-      endpoints = parseEndpoints(stackItem.handle, newBasePath, endpoints)
+      endpoints = parseEndpoints(stackItem.handle, newBasePath, endpoints, options)
     }
   })
 
@@ -194,8 +199,8 @@ const parseStack = function (stack, basePath, endpoints) {
  * Returns an array of strings with all the detected endpoints
  * @param {Object} app the express/route instance to get the endpoints from
  */
-const getEndpoints = function (app) {
-  const endpoints = parseEndpoints(app)
+const getEndpoints = function (app, options = {}) {
+  const endpoints = parseEndpoints(app, undefined, undefined, options)
 
   return endpoints
 }
