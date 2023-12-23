@@ -598,4 +598,32 @@ describe('express-list-endpoints', () => {
       expect(endpoints[1].middlewares).to.have.length(0)
     })
   })
+
+  describe('when setup with `includeMiddlewareRoutes` option', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+
+      app.get('/get-route', (req, res) => {
+        res.end()
+      })
+
+      app.use('/use-route', (req, res) => {
+        res.end()
+      })
+
+      endpoints = listEndpoints(app, { includeMiddlewareRoutes: true })
+    })
+
+    it('should list routes setup with `.use()` correctly', () => {
+      expect(endpoints).to.have.length(2)
+      expect(endpoints[0].path).to.be.equal('/get-route')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
+      expect(endpoints[1].path).to.be.equal('/use-route')
+      expect(endpoints[1].methods).to.deep.equal([])
+      expect(endpoints[1].middlewares).to.deep.equal([])
+    })
+  })
 })

@@ -53,11 +53,17 @@ Your router instance (`router`) or your app instance (`app`).
 
 _**Note:** Pay attention that before call this script the router or app must have the endpoints registered due to detect them._
 
+### `options` - Options object (optional)
+
+`options.includeMiddlewareRoutes` - Boolean (default: `false`)
+
+If `true`, it will include the routes which are being handled by middlewares.
+
 ## Contributing to express-list-endpoints
 
 ### Development
 
-Runnin test:
+Running test:
 ```shell
 npm test
 ```
