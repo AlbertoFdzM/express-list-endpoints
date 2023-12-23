@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "eslint \"**/*.js\"",
     "test": "mocha",
+    "test:inspect-brk": "mocha --inspect-brk",
     "preversion": "npm run lint && npm test",
     "version": "changelog-version && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
