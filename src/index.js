@@ -11,7 +11,7 @@ const STACK_ITEM_VALID_NAMES = [
 const STACK_ITEM_VALID_NAMES_INCLUDING_MIDDLEWARE_ROUTES = [
   '<anonymous>',
   ...STACK_ITEM_VALID_NAMES
-];
+]
 
 /**
  * Returns all the verbs detected for the passed route
@@ -167,7 +167,7 @@ const addEndpoints = function (currentEndpoints, endpointsToAdd) {
  * @returns {Object[]}
  */
 const parseStack = function (stack, basePath, endpoints, options = {}) {
-  const VALID_NAMES = options.includeMiddlewareRoutes ? STACK_ITEM_VALID_NAMES_INCLUDING_MIDDLEWARE_ROUTES : STACK_ITEM_VALID_NAMES;
+  const VALID_NAMES = options.includeMiddlewareRoutes ? STACK_ITEM_VALID_NAMES_INCLUDING_MIDDLEWARE_ROUTES : STACK_ITEM_VALID_NAMES
   stack.forEach((stackItem) => {
     if (stackItem.route) {
       const newEndpoints = parseExpressRoute(stackItem.route, basePath)
