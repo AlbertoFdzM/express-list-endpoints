@@ -1,6 +1,7 @@
-const regExpToParseExpressPathRegExp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\(\[\^\\\/]\+\?\)\)))\\\/.*/
-const regExpToReplaceExpressPathRegExpParams = /\(\?:\(\[\^\\\/]\+\?\)\)/
-const regexpExpressParamRegexp = /\(\?:\(\[\^\\\/]\+\?\)\)/g
+const regExpToParseExpressPathRegExp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\([^)]+\)\)))\\\/.*/
+const regExpToReplaceExpressPathRegExpParams = /\(\?:\([^)]+\)\)/
+const regexpExpressParamRegexp = /\(\?:\([^)]+\)\)/g
+const regexpExpressPathParamRegexp = /(:[^)]+)\([^)]+\)/g
 
 const EXPRESS_ROOT_PATH_REGEXP_VALUE = '/^\\/?(?=\\/|$)/i'
 const STACK_ITEM_VALID_NAMES = [
@@ -62,7 +63,7 @@ const parseExpressRoute = function (route, basePath) {
       : `${basePath}${path}`
 
     const endpoint = {
-      path: completePath,
+      path: completePath.replace(regexpExpressPathParamRegexp, '$1'),
       methods: getRouteMethods(route),
       middlewares: getRouteMiddlewares(route)
     }
