@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 -->
 
-## [UNRELEASED]
+## v7.0.0 - 2024-04-06
 
 ### Added
 - Add support for NodeJS v18 and v20.
