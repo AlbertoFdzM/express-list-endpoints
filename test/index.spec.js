@@ -598,4 +598,118 @@ describe('express-list-endpoints', () => {
       expect(endpoints[1].middlewares).to.have.length(0)
     })
   })
+
+  describe('supports regexp validators for params', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+
+      app.get('/foo/:item_id(\\d+)/bar', (req, res) => {
+        res.end()
+      })
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should list routes correctly', () => {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/foo/:item_id/bar')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
+    })
+  })
+
+  describe('supports multiple regexp validators for params', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+
+      app.get('/foo/bar/:baz_id(\\d+)/:biz_id(\\d+)', (req, res) => {
+        res.end()
+      })
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should list routes correctly', () => {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/foo/bar/:baz_id/:biz_id')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
+    })
+  })
+
+  describe('supports regexp validators for params with subapp', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+      const subApp = express.Router()
+
+      subApp.get('/baz', (req, res) => {
+        res.end()
+      })
+
+      app.use('/foo/:item_id(\\d+)/bar', subApp)
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should list routes correctly', () => {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/foo/:item_id/bar/baz')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
+    })
+  })
+
+  describe('supports regexp validators for params in subapp', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+      const subApp = express.Router()
+
+      subApp.get('/baz/:biz_id(\\d+)', (req, res) => {
+        res.end()
+      })
+
+      app.use('/foo/bar', subApp)
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should list routes correctly', () => {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/foo/bar/baz/:biz_id')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
+    })
+  })
+
+  describe('supports multiple regexp validators for params in subapp', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+      const subApp = express.Router()
+
+      subApp.get('/bar/:baz_id(\\d+)/:biz_id(\\d+)', (req, res) => {
+        res.end()
+      })
+
+      app.use('/foo', subApp)
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should list routes correctly', () => {
+      expect(endpoints).to.have.length(1)
+      expect(endpoints[0].path).to.be.equal('/foo/bar/:baz_id/:biz_id')
+      expect(endpoints[0].methods[0]).to.be.equal('GET')
+      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
+    })
+  })
 })

@@ -7,12 +7,16 @@ on:
   push:
     branches:
       - develop
+      - main
   pull_request:
     branches:
       - develop
+      - main
+  workflow_call:
 
 jobs:
   continuous-integration:
+    name: Lint and Test on NodeJS ${{matrix.node-version}}
 
     runs-on: ubuntu-latest
 
@@ -23,19 +27,18 @@ jobs:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
         node-version:
-          - 12
-          - 14
-          - 16
+          - 18
+          - 20
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov
-    - run: npm i -g nyc
-    - run: npm ci
-    - run: npm run lint && nyc --reporter=json npm test
-    - run: ./codecov -t ${CODECOV_TOKEN}
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov
+      - run: npm i -g nyc
+      - run: npm ci
+      - run: npm run lint && nyc --reporter=json npm test
+      - run: ./codecov -t ${CODECOV_TOKEN}

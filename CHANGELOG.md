@@ -14,6 +14,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 -->
 
+## v7.0.0 - 2024-04-06
+
+### Added
+- Add support for NodeJS v18 and v20.
+- Add support for route param regexps.
+
+### Deprecated
+- **BREAKING CHANGE** Drop support for NodeJS v12, v14 and v16.
+
 
 ## v6.0.0 - 2021-07-29
 
