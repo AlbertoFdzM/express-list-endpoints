@@ -53,6 +53,15 @@ Your router instance (`router`) or your app instance (`app`).
 
 _**Note:** Pay attention that before call this script the router or app must have the endpoints registered due to detect them._
 
-## license
+## Contributing to express-list-endpoints
 
-MIT
+### Development
+
+Runnin test:
+```shell
+npm test
+```
+
+## License
+
+Express List Endpoints is [MIT licensed](./LICENSE).
