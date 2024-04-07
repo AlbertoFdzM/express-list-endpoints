@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint \"**/*.js\"",
+    "lint": "tsc --noEmit && eslint .",
     "postversion": "git push --follow-tags",
     "prebuild": "rimraf dist",
     "preversion": "npm run lint && npm test",
