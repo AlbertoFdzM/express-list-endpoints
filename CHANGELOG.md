@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Dev
 -->
 
-## [UNRELEASED]
+## v7.1.0 - 2024-04-07
 
 ### Added
 - Add logic for apps and routers with no routes to return an empty array.

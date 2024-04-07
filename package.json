@@ -1,6 +1,6 @@
 {
   "name": "express-list-endpoints",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "A express package to list all registered endpoints and its verbs",
   "license": "MIT",
   "repository": "AlbertoFdzM/express-list-endpoints",
