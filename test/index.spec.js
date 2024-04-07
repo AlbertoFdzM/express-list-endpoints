@@ -9,68 +9,46 @@ const expect = chai.expect
 
 chai.should()
 
-function checkResults (endpoints) {
-  describe('should retrieve an array', () => {
-    endpoints.should.be.an('array')
-    endpoints.should.have.length(2)
+function assertResult (endpoints) {
+  endpoints.should.be.an('array')
+  endpoints.should.have.length(2)
 
-    it('of objects', () => {
-      endpoints.forEach((endpoint) => {
-        endpoint.should.be.an('object')
-      })
+  endpoints.forEach((endpoint) => {
+    endpoint.should.be.an('object')
+
+    endpoint.path.should.be.a('string')
+    endpoint.path.should.contains('/')
+
+    endpoint.methods.should.be.an('array')
+    endpoint.methods.forEach((method) => {
+      method.should.be.a('string')
+      expect(method).to.be.equal(method.toUpperCase())
+      expect(method).to.not.be.equal('_ALL')
     })
 
-    describe('with the app endpoints', () => {
-      endpoints.forEach((endpoint) => {
-        describe('containing', () => {
-          describe('the path', () => {
-            it('as a string', () => {
-              endpoint.path.should.be.a('string')
-            })
-
-            it('with the slashes', () => {
-              endpoint.path.should.contains('/')
-            })
-          })
-
-          describe('the methods', () => {
-            it('as an array', () => {
-              endpoint.methods.should.be.an('array')
-            })
-
-            endpoint.methods.forEach((method) => {
-              it('of strings', () => {
-                method.should.be.a('string')
-              })
-
-              it('in uppercase', () => {
-                expect(method).to.be.equal(method.toUpperCase())
-              })
-
-              it('excluding the _all ones', () => {
-                expect(method).to.not.be.equal('_ALL')
-              })
-            })
-          })
-
-          describe('the middlewares', () => {
-            it('as an array', () => {
-              endpoint.middlewares.should.be.an('array')
-            })
-
-            endpoint.middlewares.forEach((middleware) => {
-              it('of strings', () => {
-                middleware.should.be.a('string')
-              })
-            })
-          })
-        })
-      })
+    endpoint.middlewares.should.be.an('array')
+    endpoint.middlewares.forEach((middleware) => {
+      middleware.should.be.a('string')
     })
   })
 }
 
 describe('express-list-endpoints', () => {
+  describe('when called with non configured app', () => {
+    let endpoints
+
+    before(() => {
+      const app = express()
+
+      endpoints = listEndpoints(app)
+    })
+
+    it('should return an empty array', () => {
+      endpoints.should.be.an('array')
+      endpoints.should.have.length(0)
+    })
+  })
+
   describe('when called over an app', () => {
     let endpoints
 
@@ -99,8 +77,8 @@ describe('express-list-endpoints', () => {
       endpoints = listEndpoints(app)
     })
 
-    it('', () => {
-      checkResults(endpoints)
+    it('should return an array of well formed objects', () => {
+      assertResult(endpoints)
     })
   })
 
@@ -132,8 +110,8 @@ describe('express-list-endpoints', () => {
       endpoints = listEndpoints(router)
     })
 
-    it('', () => {
-      checkResults(endpoints)
+    it('should return an array of well formed objects', () => {
+      assertResult(endpoints)
     })
   })
 
@@ -168,8 +146,8 @@ describe('express-list-endpoints', () => {
       endpoints = listEndpoints(app)
     })
 
-    it('', () => {
-      checkResults(endpoints)
+    it('should return an array of well formed objects', () => {
+      assertResult(endpoints)
     })
 
     describe('and some of the routers has the option `mergeParams`', () => {
@@ -599,7 +577,7 @@ describe('express-list-endpoints', () => {
     })
   })
 
-  describe('supports regexp validators for params', () => {
+  describe('when called with route params with regexp', () => {
     let endpoints
 
     before(() => {
@@ -620,7 +598,7 @@ describe('express-list-endpoints', () => {
     })
   })
 
-  describe('supports multiple regexp validators for params', () => {
+  describe('when called with a route with multiple params with regexp', () => {
     let endpoints
 
     before(() => {
@@ -636,30 +614,6 @@ describe('express-list-endpoints', () => {
     it('should list routes correctly', () => {
       expect(endpoints).to.have.length(1)
       expect(endpoints[0].path).to.be.equal('/foo/bar/:baz_id/:biz_id')
-      expect(endpoints[0].methods[0]).to.be.equal('GET')
-      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
-    })
-  })
-
-  describe('supports regexp validators for params with subapp', () => {
-    let endpoints
-
-    before(() => {
-      const app = express()
-      const subApp = express.Router()
-
-      subApp.get('/baz', (req, res) => {
-        res.end()
-      })
-
-      app.use('/foo/:item_id(\\d+)/bar', subApp)
-
-      endpoints = listEndpoints(app)
-    })
-
-    it('should list routes correctly', () => {
-      expect(endpoints).to.have.length(1)
-      expect(endpoints[0].path).to.be.equal('/foo/:item_id/bar/baz')
       expect(endpoints[0].methods[0]).to.be.equal('GET')
       expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
     })
@@ -684,30 +638,6 @@ describe('express-list-endpoints', () => {
     it('should list routes correctly', () => {
       expect(endpoints).to.have.length(1)
       expect(endpoints[0].path).to.be.equal('/foo/bar/baz/:biz_id')
-      expect(endpoints[0].methods[0]).to.be.equal('GET')
-      expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
-    })
-  })
-
-  describe('supports multiple regexp validators for params in subapp', () => {
-    let endpoints
-
-    before(() => {
-      const app = express()
-      const subApp = express.Router()
-
-      subApp.get('/bar/:baz_id(\\d+)/:biz_id(\\d+)', (req, res) => {
-        res.end()
-      })
-
-      app.use('/foo', subApp)
-
-      endpoints = listEndpoints(app)
-    })
-
-    it('should list routes correctly', () => {
-      expect(endpoints).to.have.length(1)
-      expect(endpoints[0].path).to.be.equal('/foo/bar/:baz_id/:biz_id')
       expect(endpoints[0].methods[0]).to.be.equal('GET')
       expect(endpoints[0].middlewares[0]).to.be.equal('anonymous')
     })

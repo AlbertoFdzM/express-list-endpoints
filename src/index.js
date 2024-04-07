@@ -116,11 +116,13 @@ const parseEndpoints = function (app, basePath, endpoints) {
   basePath = basePath || ''
 
   if (!stack) {
-    endpoints = addEndpoints(endpoints, [{
-      path: basePath,
-      methods: [],
-      middlewares: []
-    }])
+    if (endpoints.length) {
+      endpoints = addEndpoints(endpoints, [{
+        path: basePath,
+        methods: [],
+        middlewares: []
+      }])
+    }
   } else {
     endpoints = parseStack(stack, basePath, endpoints)
   }
