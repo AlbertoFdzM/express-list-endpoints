@@ -7,12 +7,13 @@
 
 Express endpoint parser to retrieve a list of the passed router with the set verbs.
 
-## Example of use
+## Examples of use
 
 ```javascript
-const listEndpoints = require('express-list-endpoints');
+const express = require('express');
+const expressListEndpoints = require('express-list-endpoints');
 
-let app = require('express')();
+let app = express();
 
 app.route('/')
   .all(function namedMiddleware(req, res) {
@@ -30,7 +31,9 @@ app.route('/about')
     // Handle request
   });
 
-console.log(listEndpoints(app));
+const endpoints = expressListEndpoints(app);
+
+console.log(endpoints);
 
 /* It omits 'all' handlers.
 [
@@ -48,6 +51,33 @@ console.log(listEndpoints(app));
 */
 ```
 
+```typescript
+import express from 'express';
+import expressListEndpoints from 'express-list-endpoints';
+
+let app = express();
+
+app.route('/')
+  .all(function namedMiddleware(req, res) {
+    // Handle request
+  })
+  .get(function(req, res) {
+    // Handle request
+  })
+  .post(function(req, res) {
+    // Handle request
+  });
+
+app.route('/about')
+  .get(function(req, res) {
+    // Handle request
+  });
+
+const endpoints = expressListEndpoints(app);
+
+console.log(endpoints);
+```
+
 ## Arguments
 
 ### `app` - Express `app` or `router` instance
@@ -60,7 +90,7 @@ _**Note:** Pay attention that before call this script the router or app must hav
 
 ### Development
 
-Runnin test:
+Running test:
 ```shell
 npm test
 ```
