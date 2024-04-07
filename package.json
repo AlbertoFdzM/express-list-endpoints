@@ -1,37 +1,40 @@
 {
   "name": "express-list-endpoints",
   "version": "7.0.0",
-  "description": "A express package to list all registered endoints and its verbs",
-  "main": "src/index.js",
-  "scripts": {
-    "lint": "eslint \"**/*.js\"",
-    "test": "mocha",
-    "preversion": "npm run lint && npm test",
-    "version": "changelog-version && git add CHANGELOG.md",
-    "postversion": "git push --follow-tags"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/AlbertoFdzM/express-list-endpoints.git"
-  },
-  "keywords": [
-    "express",
-    "routes",
-    "endpoints",
-    "route",
-    "endpoint",
-    "list",
-    "ls",
-    "verb",
-    "verbs"
-  ],
-  "author": "Alberto Fernandez <albertofdzm@gmail.com>",
+  "description": "A express package to list all registered endpoints and its verbs",
   "license": "MIT",
+  "repository": "AlbertoFdzM/express-list-endpoints",
   "engines": {
     "node": ">=18"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "endpoint",
+    "endpoints",
+    "express",
+    "list",
+    "ls",
+    "methods",
+    "middlewares",
+    "paths",
+    "route",
+    "routes",
+    "verb",
+    "verbs"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit && eslint .",
+    "postversion": "git push --follow-tags",
+    "prebuild": "rimraf dist",
+    "preversion": "npm run lint && npm test",
+    "test": "mocha",
+    "version": "changelog-version && git add CHANGELOG.md"
+  },
   "devDependencies": {
-    "chai": "^4.4.1",
+    "@types/express": "^4.17.21",
+    "chai": "^4.3.4",
     "changelog-version": "^2.0.0",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
@@ -39,6 +42,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "express": "^4.19.2",
-    "mocha": "^10.4.0"
+    "mocha": "^10.4.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.4.4"
   }
 }

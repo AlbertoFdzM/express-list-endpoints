@@ -1,5 +1,9 @@
-scripts
+.github
+src
 test
 .editorconfig
 .eslintrc
-.travis.yml
+.eslintignore
+.nvmrc
+tsconfig.json
+.nyc_output
