@@ -2,7 +2,7 @@
   "name": "express-list-endpoints",
   "version": "7.0.0",
   "description": "A express package to list all registered endpoints and its verbs",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "lint": "tsc --noEmit && eslint .",
