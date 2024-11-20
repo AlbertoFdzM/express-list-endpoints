@@ -10,9 +10,9 @@
  * @property {string[]} middlewares Mounted middlewares
  */
 
-const regExpToParseExpressPathRegExp = /^\/\^\\\/(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\([^)]+\)\)))\\\/.*/
-const regExpToReplaceExpressPathRegExpParams = /\(\?:\([^)]+\)\)/
-const regexpExpressParamRegexp = /\(\?:\([^)]+\)\)/g
+const regExpToParseExpressPathRegExp = /^\/\^\\?\/?(?:(:?[\w\\.-]*(?:\\\/:?[\w\\.-]*)*)|(\(\?:\\?\/?\([^)]+\)\)))\\\/.*/
+const regExpToReplaceExpressPathRegExpParams = /\(\?:\\?\/?\([^)]+\)\)/
+const regexpExpressParamRegexp = /\(\?:\\?\\?\/?\([^)]+\)\)/g
 const regexpExpressPathParamRegexp = /(:[^)]+)\([^)]+\)/g
 
 const EXPRESS_ROOT_PATH_REGEXP_VALUE = '/^\\/?(?=\\/|$)/i'
@@ -104,7 +104,17 @@ const parseExpressPath = function (expressPathRegExp, params) {
     const paramId = `:${paramName}`
 
     parsedRegExp = parsedRegExp
-      .replace(regExpToReplaceExpressPathRegExpParams, paramId)
+      .replace(regExpToReplaceExpressPathRegExpParams, (str) => {
+        // Express >= 4.20.0 uses a different RegExp for parameters: it
+        // captures the slash as part of the parameter. We need to check
+        // for this case and add the slash to the value that will replace
+        // the parameter in the path.
+        if (str.startsWith('(?:\\/')) {
+          return `\\/${paramId}`
+        }
+
+        return paramId
+      })
 
     paramIndex++
   }
