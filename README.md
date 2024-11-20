@@ -1,5 +1,8 @@
 # Express List Endpoints
 
+> [!IMPORTANT]
+> This package only works for express 4.\* versions. It's not compatible with express 5 yet.
+
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AlbertoFdzM/express-list-endpoints/ci.yml?branch=main&logo=github)](https://github.com/AlbertoFdzM/express-list-endpoints/actions/workflows/ci.yml?query=branch%3Amain) [![Codecov Coverage Report](https://img.shields.io/codecov/c/github/AlbertoFdzM/express-list-endpoints/main)](https://codecov.io/github/AlbertoFdzM/express-list-endpoints?branch=main) [![Code Climate Maintainability Report](https://img.shields.io/codeclimate/maintainability/AlbertoFdzM/express-list-endpoints)](https://codeclimate.com/github/AlbertoFdzM/express-list-endpoints/maintainability) [![NPM Downloads](https://img.shields.io/npm/dm/express-list-endpoints)
 ](https://www.npmjs.com/package/express-list-endpoints) [![NPM License](https://img.shields.io/npm/l/express-list-endpoints)](https://www.npmjs.com/package/express-list-endpoints)
 
@@ -10,26 +13,26 @@ Express endpoint parser to retrieve a list of the passed router with the set ver
 ## Examples of use
 
 ```javascript
-const express = require('express');
-const expressListEndpoints = require('express-list-endpoints');
+const express = require("express");
+const expressListEndpoints = require("express-list-endpoints");
 
 let app = express();
 
-app.route('/')
+app
+  .route("/")
   .all(function namedMiddleware(req, res) {
     // Handle request
   })
-  .get(function(req, res) {
+  .get(function (req, res) {
     // Handle request
   })
-  .post(function(req, res) {
+  .post(function (req, res) {
     // Handle request
   });
 
-app.route('/about')
-  .get(function(req, res) {
-    // Handle request
-  });
+app.route("/about").get(function (req, res) {
+  // Handle request
+});
 
 const endpoints = expressListEndpoints(app);
 
@@ -52,26 +55,26 @@ console.log(endpoints);
 ```
 
 ```typescript
-import express from 'express';
-import expressListEndpoints from 'express-list-endpoints';
+import express from "express";
+import expressListEndpoints from "express-list-endpoints";
 
 let app = express();
 
-app.route('/')
+app
+  .route("/")
   .all(function namedMiddleware(req, res) {
     // Handle request
   })
-  .get(function(req, res) {
+  .get(function (req, res) {
     // Handle request
   })
-  .post(function(req, res) {
+  .post(function (req, res) {
     // Handle request
   });
 
-app.route('/about')
-  .get(function(req, res) {
-    // Handle request
-  });
+app.route("/about").get(function (req, res) {
+  // Handle request
+});
 
 const endpoints = expressListEndpoints(app);
 
@@ -91,6 +94,7 @@ _**Note:** Pay attention that before call this script the router or app must hav
 ### Development
 
 Running test:
+
 ```shell
 npm test
 ```
